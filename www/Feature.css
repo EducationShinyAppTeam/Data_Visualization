@@ -1,9 +1,11 @@
 .skin-blue .main-header>.navbar {
 background-color: #1E407C;
 }
+
 .content-wrapper,.right-side {
 background-color: white;
 }
+
 .skin-blue .main-header .logo {
 background-color: #1E407C;
 color: white;
@@ -11,6 +13,7 @@ color: white;
 .skin-blue .main-header .logo:hover {
 background-color: black;
 }
+
 aside.main-sidebar {
 background-color: black !important;
 }
