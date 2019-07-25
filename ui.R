@@ -382,22 +382,35 @@ plot(cars$speed)
                                      
                                  ),
                                  
-                                 box(title = NULL, style = 'background-color: #f0f4c3', width=NULL, height = NULL,
+                                 # box(title = NULL, style = 'background-color: #f0f4c3', width=NULL, height = NULL,
                                 
                                      conditionalPanel('input.mapsOp == "US Map - ggplot2"',
-                                                      tags$strong('R code: '),
-                                                      uiOutput('usMapOut2'),
-                                                      br(),
-                                                      div(style = "height: 300px; width: 600px",plotOutput('usMapOut1')
+                                                      div(style = "background-color: #f0f4c3",
+                                                          tags$strong('R code: '),
+                                                          uiOutput('usMapOut2'),
+                                                          br(),
+                                                          fluidRow(
+                                                            column(12, align="center",
+                                                                   plotOutput('usMapOut1', width="80%")
+                                                            )
+                                                          ),
+                                                          br()
+                                                          
                                                       )),
                                      
                                      conditionalPanel('input.mapsOp == "US Map - plotly"',
+                                                      div(style = "background-color: #f0f4c3",
                                                       tags$strong('R code: '),
                                                       uiOutput('plotlyUScode'),
                                                       br(),
-                                                      plotlyOutput('plotlyUSMap')
-                                     )
-                                 )
+                                                      fluidRow(
+                                                        column(12, align="center",
+                                                               plotlyOutput('plotlyUSMap', width='80%'))
+                                                      ),
+                                                      br()
+                                                      
+                                     ))
+                                 # )
                         ),
                         
                         ###### 3D Plots ######
@@ -531,8 +544,17 @@ plot(cars$speed)
                                  br(),
                                  sidebarLayout(
                                    sidebarPanel(
-                                     box(title = NULL, style = 'background-color: #f0f4c3', width = NULL, height = NULL,
-                                         div('Heat maps and contour plots are visualization techniques to show data density on a map. They are particularly helpful when you have a lot of data points on the map and are mainly interested in their overall distribution.', style = 'color: blue'),
+                                     tags$head(tags$style(
+                                       HTML('#sidebarmap{
+                                                background-color: #f0f4c3;
+                                            }')
+                                     )),
+                                     #box(title = NULL, style = 'background-color: #f0f4c3', width = NULL, height = NULL,
+                                         id="sidebarmap",
+                                        div('Heat maps and contour plots are visualization techniques to show 
+                                            data density on a map. They are particularly helpful when you have 
+                                            a lot of data points on the map and are mainly interested in their 
+                                            overall distribution.'),
                                          br(),
                                          selectInput(inputId = 'chSel', label = 'Please Select Your Display Option', choices = c('', 'Contour Plots', 'Heatmaps'), selected = 'Contour Plots'),
                                          
@@ -553,7 +575,7 @@ plot(cars$speed)
                                                           )
                                                           
                                          )
-                                     )
+                                     #)
                                    ),
                                    
                                    mainPanel(
