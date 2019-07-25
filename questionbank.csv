@@ -1,15 +1,15 @@
 ﻿ID,question,A,B,C,Answer
-1,Which line of code can create a blue regression line in ggplot?,"geom_smooth(method=lm, color=""red"")","geom_smooth(method=lm, fill=""blue"")","geom_smooth(method=lm, color=""blue"")",C
-2,Which line of code can create a dashed line graph with ggplot?,"ggplot()+geom_line(linetype=""dashed"")",ggplot()+geom_histogram(),ggplot()+geom_boxplot(notch=T),A
-3,"With 100 data points  and no bins specified, how many bins will be created in a histogram in ggplot?",15,25,30,C
-4,Which line of code can add a vertical line in ggplot?,geom_hline(),geom_vline(),geom_line(),B
-5,Which line of code sets x-axis range in ggplot between -100 and 100?,"scale_x_continuous(limits=c(-100, 100))","scale_x_continuous(-100, 100)","scale_X_continuous(-100, 100)",A
-6,"What does the term ""Geoms"" in ggplot2 stand for?",Geometric objects that are drawn to represent the data,Draw a visulized graph,Heatmap Object,A
-7,Which command can describe the type of plot you produce with ggplot?,qqplot(),geoms(),ggplot(),B
-8,Which line of code allows us to add text to the plot with ggplot?,geom_point(),geom_label(),geom_text(),C
-9,Which line of code can draw a density plot on the variable Sepal.Length in the iris dataset?,plot(density(iris$Sepal.Length)),density(iris$Sepal.Length),hist(iris$Sepal.Length),A
-10,Which line of code can draw a histogram plot on the variable speed in the cars dataset?,plot(cars$speed),hist(cars$speed),barplot(cars$speed),B
-11,Which line of code removes a plot's axes labels and annotations?,"plot(x, y, xaxt=""n"", yaxt=""n"", ann=FALSE)","plot(x, y, ann=TRUE)","plot(x, y, ann=FALSE)",A
-12,Which function can change the legend in RPlot?,col(),label(),legend(),C
-13,Which function can help adjust the size of points in RPlot?,par(),symbols(),grid(),B
-14,Which line of code can draw a line with slope b and intercept a?,"abline(a,b)","abline(b,a)",abline(a=b),A
+2,Which line of code can create a blue regression line in ggplot?,"geom_smooth(method=lm, color=""red"")","geom_smooth(method=lm, fill=""blue"")","geom_smooth(method=lm, color=""blue"")",C
+3,Which line of code can create a dashed line graph with ggplot?,"ggplot()+geom_line(linetype=""dashed"")",ggplot()+geom_histogram(),ggplot()+geom_boxplot(notch=T),A
+4,"With 100 data points  and no bins specified, how many bins will be created in a histogram in ggplot?",15,25,30,C
+5,Which line of code can add a vertical line in ggplot?,geom_hline(),geom_vline(),geom_line(),B
+6,Which line of code sets x-axis range in ggplot between -100 and 100?,"scale_x_continuous(limits=c(-100, 100))","scale_x_continuous(-100, 100)","scale_X_continuous(-100, 100)",A
+7,"What does the term ""Geoms"" in ggplot2 stand for?",Geometric objects that are drawn to represent the data,Draw a visulized graph,Heatmap Object,A
+8,Which command can describe the type of plot you produce with ggplot?,qqplot(),geoms(),ggplot(),B
+9,Which line of code allows us to add text to the plot with ggplot?,geom_point(),geom_label(),geom_text(),C
+10,Which line of code can draw a density plot on the variable Sepal.Length in the iris dataset?,plot(density(iris$Sepal.Length)),density(iris$Sepal.Length),hist(iris$Sepal.Length),A
+11,Which line of code can draw a histogram plot on the variable speed in the cars dataset?,plot(cars$speed),hist(cars$speed),barplot(cars$speed),B
+12,Which line of code removes a plot's axes labels and annotations?,"plot(x, y, xaxt=""n"", yaxt=""n"", ann=FALSE)","plot(x, y, ann=TRUE)","plot(x, y, ann=FALSE)",A
+13,Which function can change the legend in RPlot?,col(),label(),legend(),C
+14,Which function can help adjust the size of points in RPlot?,par(),symbols(),grid(),B
+15,Which line of code can draw a line with slope b and intercept a?,"abline(a,b)","abline(b,a)",abline(a=b),A
