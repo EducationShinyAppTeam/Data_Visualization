@@ -630,7 +630,7 @@ shinyServer(function(input, output, session) {
   value <- reactiveValues(index =  1, mistake = 0,correct = 0)
   ans <- as.matrix(bank[1:14,6])
   #ans <- data.frame(ans)
-  index_list<-reactiveValues(list=sample(1:14,10,replace=FALSE))
+  index_list<-reactiveValues(list=sample(2:14,10,replace=FALSE))
   
   observeEvent(input$nextq,{
     value$answerbox <- value$index
@@ -755,7 +755,7 @@ shinyServer(function(input, output, session) {
     updateButton(session, "submit", disabled = FALSE)
     updateButton(session,"reset",disable =TRUE)
     updateSelectInput(session,"answer", "pick an answer from below", c("","A", "B", "C"))
-    index_list$list<-c(index_list$list,sample(1:14,10,replace=FALSE))
+    index_list$list<-c(index_list$list,sample(2:14,10,replace=FALSE))
     value$index <- 1
     value$answerbox = value$index
     ans <- as.matrix(bank[1:14,6])
