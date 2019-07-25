@@ -663,7 +663,7 @@ shinyServer(function(input, output, session) {
     interacted_statement <- rlocker::createStatement(
       list(
         verb = list(
-          display = "selected"
+          display = "interacted"
         ),
         object = list(
           id = paste0(getCurrentAddress(session), "#", value$index),
@@ -672,7 +672,7 @@ shinyServer(function(input, output, session) {
           
         ),
         result = list(
-          success = any(answer == ans[value$index,1]),
+          success = NA,
           response = paste(getResponseText(value$index, answer))
         )
       )

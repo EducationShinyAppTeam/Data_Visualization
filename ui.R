@@ -308,9 +308,9 @@ body = dashboardBody(
                                           br(),
                                           
                                           ##########try rlocker statement#########
-                                          tags$samp(
-                                            htmlOutput("statements")
-                                          ),
+                                          # tags$samp(
+                                          #   htmlOutput("statements")
+                                          # ),
                                           ##########end#############
                                           
                                           h2("Try Your Code"),  
