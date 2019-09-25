@@ -1,2 +1,4 @@
 # Data_Visualization_App
-data science chapter app
+Data Visualization App 
+Data Science Chapter
+
