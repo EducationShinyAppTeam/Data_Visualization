@@ -2,3 +2,4 @@
 Data Visualization App 
 Data Science Chapter
 
+![Cover Page](coverpic.png)
