@@ -11,7 +11,7 @@ library(ggplot2)
 library(EDAWR)
 library(plot3D)
 library(ggmap)
-#library(datasets)
+library(datasets)
 library(shinyAce)
 library(shinycssloaders)
 library(rlocker)
@@ -20,10 +20,11 @@ source("helpers.R")
 
 header = dashboardHeader(title = 'Data Visualization',
                          tags$li(class = "dropdown",
-                                 tags$a(href = "https://shinyapps.science.psu.edu/",
-                                        icon("home"))),
+                                 actionLink("info", icon("info"), class = "myClass")),
                          tags$li(class = "dropdown",
-                                 actionLink("info", icon("info"), class = "myClass")))
+                                 tags$a(href = "https://shinyapps.science.psu.edu/",
+                                        icon("home")))
+                         )
 
 sidebar = dashboardSidebar(
   sidebarMenu(id = 'tabs',
@@ -53,7 +54,7 @@ body = dashboardBody(
             
             h3(strong('Instructions:')),
             h4(tags$li("Simple data visualization section introduces
-                       how to create some common use plots with ggplot and Rplot with exercise at the end.")),
+                       how to create some commonly used plots with ggplot and Rplot with exercises at the end.")),
             h4(tags$li("Advanced Data Visualization section
                       introduces 3D plots, line plots, contour plots, and heat maps.")),
             br(),
@@ -96,7 +97,7 @@ body = dashboardBody(
                                             }')
                                      )),
                                      ####select between plot and ggplot
-                                     selectInput(inputId="plotType", label="select Plot Type",
+                                     selectInput(inputId="plotType", label="Select Plot Package",
                                                  choices = c('plot', 'ggplot'),
                                                  selected = 'plot'),
                                      
@@ -262,7 +263,7 @@ body = dashboardBody(
                                             tags$div(tags$ul(
                                               tags$li("You can try the following questions"),
                                               tags$li("Test your code with the following R script
-                                             box with the RMarkDown output on the right side"),
+                                             box with the RMarkDown output under the 'Knitted Output' header"),
                                               tags$li("In each turn, 10 questions will be randomly draw from the question bank."),
                                               tags$li("Uncomment the sample code to start to explore.")
                                               ),
@@ -273,7 +274,7 @@ body = dashboardBody(
                                                       uiOutput("question")%>% withSpinner(color="#1E7B14"),
                                                       uiOutput("options"),
                                                       br(),
-                                                      selectInput("answer", "pick an answer from below", c("","A", "B", "C")),
+                                                      selectInput("answer", "Select your answer from below", c("","A", "B", "C")),
                                                       uiOutput("mark"),
                                                       tags$style(type='text/css', '#question{font-size: 15px;
                                                                  background-color: #b8f28c;color: black;}',

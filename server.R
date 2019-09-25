@@ -91,7 +91,7 @@ shinyServer(function(input, output, session) {
     sendSweetAlert(
       session = session,
       title = "Instructions:",
-      text = "Move the sliders or select from the dropdown menus and view the R code that produces the results.",
+      text = "Select the variables or the dataset to be used. Select answers for the exercise.",
       type = NULL
     )
   })
@@ -361,20 +361,20 @@ shinyServer(function(input, output, session) {
   output$DensityoneCode <- renderText({
     if (input$dataset == 'cars'){
       if (input$plotType == 'plot'){
-        paste('plot(density(', input$dataset, '$', input$carsVariable, '))', seq='')
+        paste('R Code:','plot(density(', input$dataset, '$', input$carsVariable, '))', seq='')
       }
       else if (input$plotType == 'ggplot'){
-        paste("ggplot(aes(",input$carsVariable,"), data=cars)+
+        paste('R Code:',"ggplot(aes(",input$carsVariable,"), data=cars)+
           geom_density(color='darkblue', fill='lightblue', alpha=0.4)+
           ggtitle('Density Plot')", seq='')
       }
     }
     else{
       if (input$plotType == 'plot'){
-        paste('plot(density(', input$dataset, '$', input$treesVariable, ')', seq='')
+        paste('R Code:','plot(density(', input$dataset, '$', input$treesVariable, ')', seq='')
       }
       else if (input$plotType == 'ggplot'){
-        paste("ggplot(aes(",input$treesVariable,"), data=trees)+
+        paste('R Code:',"ggplot(aes(",input$treesVariable,"), data=trees)+
               geom_density(color='darkblue', fill='lightblue', alpha=0.4)+
               ggtitle('Density Plot')", seq='')
       }
@@ -384,20 +384,20 @@ shinyServer(function(input, output, session) {
   output$HistogramoneCode <- renderText({
     if (input$dataset == 'cars'){
       if(input$plotType == 'plot'){
-        paste('hist(', input$dataset, '$', input$carsVariable, ')', seq='')
+        paste('R Code:','hist(', input$dataset, '$', input$carsVariable, ')', seq='')
       }
       else{
-        paste("ggplot(aes(",input$carsVariable,"), data=cars)+
+        paste('R Code:',"ggplot(aes(",input$carsVariable,"), data=cars)+
           geom_histogram(color='darkblue', fill='lightblue', alpha=0.4)+
           ggtitle('Histogram')", seq='')
       }
     }
     else{
       if(input$plotType == 'plot'){
-        paste('hist(', input$dataset, '$', input$treesVariable, ')', seq='')
+        paste('R Code:','hist(', input$dataset, '$', input$treesVariable, ')', seq='')
       }
       else{
-        paste("ggplot(aes(",input$treesVariable,"), data=trees)+
+        paste('R Code:',"ggplot(aes(",input$treesVariable,"), data=trees)+
               geom_histogram(color='darkblue', fill='lightblue', alpha=0.4)+
               ggtitle('Histogram')", seq='')
       }
@@ -407,10 +407,10 @@ shinyServer(function(input, output, session) {
   output$BarCode <- renderText({
     if (input$dataset == 'cars'){
       if (input$plotType == 'plot'){
-        paste('barplot(', input$dataset, '$', input$carsVariable, ')', seq='')
+        paste('R Code:','barplot(', input$dataset, '$', input$carsVariable, ')', seq='')
       }
       else{
-        paste("ggplot(aes(",input$carsVariable,"), data=cars)+
+        paste('R Code:',"ggplot(aes(",input$carsVariable,"), data=cars)+
                 geom_freqpoly(bins = 30)+
                 geom_area(stat = 'bin', bins = 30,
                           color='darkblue', fill='lightblue', alpha=0.4)+
@@ -419,10 +419,10 @@ shinyServer(function(input, output, session) {
     }
     else{
       if (input$plotType == 'plot'){
-        paste('barplot(', input$dataset, '$', input$treesVariable, ')', seq='')
+        paste('R Code:','barplot(', input$dataset, '$', input$treesVariable, ')', seq='')
       }
       else{
-        paste("ggplot(aes(",input$treesVariable,"), data=trees)+
+        paste('R Code:',"ggplot(aes(",input$treesVariable,"), data=trees)+
               geom_freqpoly(bins = 30)+
               geom_area(stat = 'bin', bins = 30,
               color='darkblue', fill='lightblue', alpha=0.4)+
@@ -434,22 +434,22 @@ shinyServer(function(input, output, session) {
   output$qqCode <- renderText({
     if (input$dataset == 'cars'){
       if (input$plotType == 'plot'){
-        paste0('qqnorm(', input$dataset, '$', input$carsVariable, ')',
+        paste0('R Code: ','qqnorm(', input$dataset, '$', input$carsVariable, ')',
                '\n qqline(', input$dataset, '$', input$carsVariable, ')', seq='')
       }
       else{
-        paste("ggplot(aes(sample=",input$carsVariable,"), data=cars)+
+        paste('R Code:',"ggplot(aes(sample=",input$carsVariable,"), data=cars)+
           stat_qq(color='darkblue', fill='lightblue', alpha=0.4)+
           stat_qq_line(color='red')", seq='')
       }
     }
     else{
       if (input$plotType == 'plot'){
-        paste0('qqnorm(', input$dataset, '$', input$treesVariable, ')',
+        paste0('R Code:','qqnorm(', input$dataset, '$', input$treesVariable, ')',
                'qqline(', input$dataset, '$', input$treesVariable, ')', seq='')
       }
       else{
-        paste("ggplot(aes(sample=",input$treesVariable,"), data=trees)+
+        paste('R Code:',"ggplot(aes(sample=",input$treesVariable,"), data=trees)+
               stat_qq(color='darkblue', fill='lightblue', alpha=0.4)+
               stat_qq_line(color='red')", seq='')
       }
@@ -579,7 +579,7 @@ shinyServer(function(input, output, session) {
   })
   
   output$twoscattercode<-renderText({
-    paste("ggplot(aes(",input$continuous1,',', input$continuous2, "), data=iris)+
+    paste('R Code:',"ggplot(aes(",input$continuous1,',', input$continuous2, "), data=iris)+
       geom_point(aes(colour = factor(Species)))+
       geom_smooth(aes(colour = factor(Species)), linetype='twodash', size=0.8)+
       ggtitle('Scatter Plot')", seq='')
@@ -587,21 +587,21 @@ shinyServer(function(input, output, session) {
   )
   
   output$logTransformationCode<-renderText({
-    paste("ggplot(aes(", input$continuous1,',', input$continuous2, "), data=iris)+
+    paste('R Code:',"ggplot(aes(", input$continuous1,',', input$continuous2, "), data=iris)+
       geom_point(aes(colour = factor(Species)))+
       coord_trans(x='log2', y='log2')+
       ggtitle('Log Transformation')", seq='')
   })
   
   output$twobarcode<-renderText({
-    paste("ggplot(data=iris, aes(", input$continuous1,',', input$continuous2, 
+    paste('R Code:',"ggplot(data=iris, aes(", input$continuous1,',', input$continuous2, 
           "fill=factor(Species)))+
                     geom_bar(stat='identity')+
                     ggtitle('Bar Plot')", seq='')
   })
   
   output$twoboxcode<-renderText({
-    paste("ggplot(data=iris, aes(", input$continuous1,',', input$continuous2, "color=Species)) +
+    paste('R Code:',"ggplot(data=iris, aes(", input$continuous1,',', input$continuous2, "color=Species)) +
       geom_boxplot()+
       ggtitle('Boxplot')", seq='')
   })
