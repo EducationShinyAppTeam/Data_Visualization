@@ -1,69 +1,72 @@
+#once included datasets, mosaic and dyplr but beleived unnecessary. 
 library(shiny)
 library(shinydashboard)
 library(shinyBS)
 library(shinyjs)
 library(shinyWidgets)
-library(dplyr)
-library(mosaic)
 library(plotly)
 library(ggplot2)
-library(datasets)
 library(shinyAce)
 library(shinycssloaders)
 library(rlocker)
 library(ggmap)
+library(boastUtils)
+library(DT)
 
 source("helpers.R")
-
-header = dashboardHeader(title = 'Data Visualization',
-                         tags$li(class = "dropdown",
-                                 actionLink("info", icon("info"), class = "myClass")),
-                         tags$li(class = "dropdown",
-                                 tags$a(href = "https://shinyapps.science.psu.edu/",
+ui <- list(
+  dashboardPage(skin = "green",
+    header = dashboardHeader(title = 'Data Visualization',
+                         tags$li(class = "dropdown", actionLink("info", icon("info"), class = "myClass")),
+                         tags$li(class = "dropdown",tags$a(href = "https://shinyapps.science.psu.edu/",
                                         icon("home")))
-                         )
+                         ),
 
 sidebar = dashboardSidebar(
+  width = 250,
   sidebarMenu(id = 'tabs',
               menuItem('Overview', tabName = 'overview', icon = icon("dashboard")),
               menuItem('Simple Data Visualization', tabName = 'VisualOne', 
                        icon = icon('wpexplorer')),
-              menuItem('Advanced Data Visualization', tabName = 'exp4', icon = icon('wpexplorer'))
-  )
-)
+              menuItem('Advanced Data Visualization', tabName = 'exp4', icon = icon('wpexplorer')),
+              menuItem('References', tabName = "References", icon = icon("leanpub"))
+  ),
+  #PSU logo
+  tags$div(class = "sidebar-logo",
+           boastUtils::psu_eberly_logo("reversed"))
+),
 
 body = dashboardBody(
   tags$head( 
-    tags$link(rel = "stylesheet", type = "text/css", href = "Feature.css")
+    tags$link(rel = "stylesheet", type = "text/css", href = "https://educationshinyappteam.github.io/Style_Guide/theme/boast.css")
   ),
   tags$style(type = "text/css", ".content-wrapper,.right-side {background-color: white;}"),
   
   useShinyjs(),
   tabItems(
     tabItem(tabName = 'overview',
-            tags$a(href='http://stat.psu.edu/', tags$img(src = 'psu_icon.jpg', align = "left", width = 180)),
+            h1('Data Visualization App'),
             br(),
-            br(),
-            br(),
-            h3(strong('About:')),
-            h4('This app illustrates R code for data visualization.'),
+            h2(strong('About:')),
+            p('This app illustrates R code for data visualization.'),
             br(),
             
-            h3(strong('Instructions:')),
-            h4(tags$li("Simple data visualization section introduces
+            h2(strong('Instructions:')),
+            p(tags$li("Simple data visualization section introduces
                        how to create some commonly used plots with ggplot and Rplot with exercises at the end.")),
-            h4(tags$li("Advanced Data Visualization section
+            p(tags$li("Advanced Data Visualization section
                       introduces 3D plots, line plots, contour plots, and heat maps.")),
             br(),
             div(style = 'text-align: center', 
                 bsButton(inputId = 'go2', label = 'Explore', 
                          icon = icon('bolt'), size = 'large', class='circle grow')),
             br(),
-            h3(strong('Acknowledgements:')),
-            h4('This application was coded and developed by Anna (Yinqi) Zhang in 2018 and Yiyun Gong in 2019. 
-               Special Thanks to Grace (Yubaihe) Zhou for being incredibly helpful with programming issues.'),
-            h4('Packages used: EDAWR, ggmap, mosaic, plotly, ggplot2, plot3D, shinyAce.')
-    ),
+            h2(strong('Acknowledgements:')),
+            p('This application was coded and developed by Anna (Yinqi) Zhang in 2018 and Yiyun Gong in 2019. 
+               Special Thanks to Grace (Yubaihe) Zhou for being incredibly helpful with programming issues.
+              It was updated for formatting by Ethan Wright 2020'),
+            div(class = "updated", "Last Update: 9/4/2020 by EJW.")
+        ),
     
     ############ Data Visualization Introduction #######
     ######Characterizing one single Variable######
@@ -79,9 +82,9 @@ body = dashboardBody(
             tabsetPanel(type = 'tabs',
                         ###### One Variable ######
                         tabPanel('Single Variable',
-                                 h3(strong('One Variable Visualization')),
+                                 h1(strong('One Variable Visualization')),
                                  # br(),
-                                 h4('This section illustrates R code for data 
+                                 p('This section illustrates R code for data 
                                     visulization includes plot() and ggplot() with one Variable'),
                                  
                                  br(),
@@ -90,9 +93,12 @@ body = dashboardBody(
                                      id="sidebar",
                                      tags$head(tags$style(
                                        HTML('#sidebar{
-                                                background-color: #b8f28c;
+                                                background-color: #FFFFFF;
                                             }')
                                      )),
+                                     
+                                     checkboxInput("previewData", "Preview of Datasets"),
+                                     
                                      ####select between plot and ggplot
                                      selectInput(inputId="plotType", label="Select Plot Package",
                                                  choices = c('plot', 'ggplot'),
@@ -117,30 +123,28 @@ body = dashboardBody(
                                        selectInput(inputId="treesVariable", label="Select Variables",
                                                    choices = c("Girth", "Height", "Volume"),
                                                    selected = 'Girth')
-                                     ),
+                                     )
                                      #tags$img(src="DataView.pdf")
                                      #includeHTML("ViewData.nb.html")
                                      #tags$a(tags$img(src="pdficon.png"), href="DataView.pdf", download="Viewdata.pdf")
                                      # br(),
                                      #downloadLink("downloadData", "Preview of Data"),
                                      
-                                       checkboxInput("previewData", "Preview of Datasets")
-                                       
                                    ),
                                    
                                    mainPanel(
                                      conditionalPanel(
-                                       condition="input.previewData==1",
+                                       condition="input.previewData==1", 
+                                      
                                        fluidRow(
-                                         column(2, p(strong("Dataset cars"))),
-                                         column(4, tableOutput("Previewcar")),
-                                         column(2, p(strong("Dataset trees"))),
-                                         column(4, tableOutput("Previewtree"))
+                                         column(2, p(strong("Dataset"))),
+                                         column(4, DT::dataTableOutput("dataTable")),
+                                       
                                        )
                                      ),
                                      fluidRow(
-                                       column(6,plotOutput(outputId="oneDensity", width="100%",height="300px")%>% withSpinner(color="#1E7B14")),  
-                                       column(6,plotOutput(outputId="onehist", width="100%",height="300px")%>% withSpinner(color="#1E7B14"))
+                                       column(6,plotOutput(outputId="oneDensity", width="100%",height="300px")%>% withSpinner(color="#FFFFFF")),  
+                                       column(6,plotOutput(outputId="onehist", width="100%",height="300px")%>% withSpinner(color="#FFFFFF"))
                                      ),
                                      fluidRow(
                                        column(width = 6, textOutput(outputId="DensityoneCode")),
@@ -152,7 +156,7 @@ body = dashboardBody(
                                      br(),
                                      tags$head(tags$style("#qqCode, #BarCode, #DensityoneCode, #HistogramoneCode,
                                                           #twoscattercode, #logTransformationCode, #twobarcode, #twoboxcode
-                                                          {color: #005485}"
+                                                          {color: #FFFFFF}"
                                      )),
                                      
                                      
@@ -187,11 +191,12 @@ body = dashboardBody(
                                      id="sidebar",
                                      tags$head(tags$style(
                                        HTML('#sidebar{
-                                                background-color: #b8f28c;
+                                                background-color: #FFFFFF;
                                             }')
                                      )),
                                      ####select continuous variable 1
-                                     selectInput(inputId="continuous1", 
+                                     checkboxInput("previewDataTwo", "Preview of Datasets"),
+                                     selectInput(inputId="continuous1",
                                                  label="Select First Continuous Variable as X:",
                                                  choices= c('Sepal.Length', 
                                                             'Sepal.Width'),
@@ -208,9 +213,6 @@ body = dashboardBody(
                                                  choices= 'Species',
                                                  selected = 'Species'),
                                      
-                                     checkboxInput("previewDataTwo", "Preview of Datasets")
-                                     
-                                     
                                    ),
                                    
                                    mainPanel(
@@ -218,14 +220,14 @@ body = dashboardBody(
                                        condition="input.previewDataTwo==1",
                                        fluidRow(
                                          column(2, p(strong("Dataset iris"))),
-                                         column(5, tableOutput("Previewiris"))
+                                         column(5, dataTableOutput("Previewiris"))
                                        )
                                        #tableOutput("Previewiris")
                                        #p("First four rows of dataset iris")
                                      ),
                                      fluidRow(
-                                       column(6,plotOutput(outputId="twoscatter")%>% withSpinner(color="#1E7B14")),
-                                       column(6,plotOutput(outputId="logTransformation")%>% withSpinner(color="#1E7B14"))
+                                       column(6,plotOutput(outputId="twoscatter")%>% withSpinner(color="#FFFFFF")),
+                                       column(6,plotOutput(outputId="logTransformation")%>% withSpinner(color="#FFFFFF"))
                                      ),
                                      br(),
                                      fluidRow(
@@ -234,8 +236,8 @@ body = dashboardBody(
                                      ),
                                      br(),
                                      fluidRow(
-                                       column(6,plotOutput(outputId="twobar")%>% withSpinner(color="#1E7B14")),
-                                       column(6,plotOutput(outputId="twobox")%>% withSpinner(color="#1E7B14"))
+                                       column(6,plotOutput(outputId="twobar")%>% withSpinner(color="#FFFFFF")),
+                                       column(6,plotOutput(outputId="twobox")%>% withSpinner(color="#FFFFFF"))
                                      ),
                                      br(),
                                      fluidRow(
@@ -256,7 +258,7 @@ body = dashboardBody(
                                           verticalLayout(
                                             h2("Instructions"),
                                             wellPanel(
-                                              style = "background-color: #9ff28c",
+                                              style = "background-color: #FFFFFF",
                                             tags$div(tags$ul(
                                               tags$li("You can try the following questions"),
                                               tags$li("Test your code with the following R script
@@ -264,29 +266,29 @@ body = dashboardBody(
                                               tags$li("In each turn, 10 questions will be randomly draw from the question bank."),
                                               tags$li("Uncomment the sample code to start to explore.")
                                               ),
-                                              style = "background-color: #9ff28c")),
+                                              style = "background-color: #FFFFFF")),
                                             h2("Exercises"),
                                             uiOutput('progress'),
-                                            wellPanel(style = "background-color: #b8f28c",
-                                                      uiOutput("question")%>% withSpinner(color="#1E7B14"),
+                                            wellPanel(style = "background-color: #FFFFFF",
+                                                      uiOutput("question")%>% withSpinner(color="#FFFFFF"),
                                                       uiOutput("options"),
                                                       br(),
                                                       selectInput("answer", "Select your answer from below", c("","A", "B", "C")),
                                                       uiOutput("mark"),
                                                       tags$style(type='text/css', '#question{font-size: 15px;
-                                                                 background-color: #b8f28c;color: black;}',
+                                                                 background-color: #FFFFFF;color: black;}',
                                                                  '.well { padding: 10px; margin-bottom: 15px; max-width: 1000px; }')
                                                       
                                             ),
                                           fluidPage(
                                             tags$head(
-                                              tags$style(HTML('#submit{background-color:#5a992b; color:white}')),
-                                              tags$style(HTML('#eval{background-color:#5a992b; color:white}')),
-                                              tags$style(HTML('#nextq{background-color:#5a992b; color:white}'))
+                                              #tags$style(HTML('#submit{background-color:#FFFFFF; color:white}')),
+                                              #tags$style(HTML('#eval{background-color:#FFFFFF; color:white}')),
+                                              #tags$style(HTML('#nextq{background-color:#FFFFFF; color:white}'))
                                             ),
                                             fluidRow(
                                               column(12, align="center",
-                                                     div(style="display: inline-block", actionButton(inputId = 'submit', label = 'Submit', style="success")),
+                                                     div(style="display: inline-block", actionButton(inputId = 'submit', label = 'Submit', disabled = TRUE, style="success")),
                                                      div(style="display: inline-block;vertical-align:top; width: 30px;",HTML("<br>")),
                                                      div(style="display: inline-block", bsButton(inputId = "nextq",label = "Next", disabled = TRUE)),
                                                      div(style="display: inline-block;vertical-align:top; width: 30px;",HTML("<br>")),
@@ -360,7 +362,7 @@ plot(cars$speed)
                         ###### Maps ######
                         tabPanel('Maps',
                                  br(),
-                                 box(title = NULL, style = 'background-color: #dce775', width = NULL, height = NULL,
+                                 box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
                                      
                                      selectInput(inputId = 'mapsOp', label = 'Make a US/World Map with ggplot2',
                                                  choices = c('US Map - ggplot2', 'US Map - plotly'), selected = 'US Map'),
@@ -383,7 +385,7 @@ plot(cars$speed)
                                  # box(title = NULL, style = 'background-color: #f0f4c3', width=NULL, height = NULL,
                                 
                                      conditionalPanel('input.mapsOp == "US Map - ggplot2"',
-                                                      div(style = "background-color: #f0f4c3",
+                                                      div(style = "background-color: #FFFFFF",
                                                           tags$strong('R code: '),
                                                           uiOutput('usMapOut2'),
                                                           br(),
@@ -397,7 +399,7 @@ plot(cars$speed)
                                                       )),
                                      
                                      conditionalPanel('input.mapsOp == "US Map - plotly"',
-                                                      div(style = "background-color: #f0f4c3",
+                                                      div(style = "background-color: #FFFFFF",
                                                       tags$strong('R code: '),
                                                       uiOutput('plotlyUScode'),
                                                       br(),
@@ -416,7 +418,7 @@ plot(cars$speed)
                                  br(),
                                  fluidRow(
                                    column(width = 12,
-                                          box(title = NULL, style = 'background-color: #e8eaf6', width = NULL, height = NULL,
+                                          box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
                                               selectInput(inputId = 'Exsel', label = '3D Plot Type', 
                                                           choices = c('Normal Simulation via Plotly', '3D Basic Scatter Plot', '3D Texts Plot'),
                                                           # choices = c('Normal Simulation via Plotly', 'Basic Scatter Plot', 'Basic Scatter Plot Colored by Groups', 
@@ -457,7 +459,7 @@ plot(cars$speed)
                                  ),
                                  fluidRow(
                                    column(width = 12,
-                                          box(title = NULL, style = 'background-color: #9fa8da', width = NULL, height = NULL,
+                                          box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
                                               
                                               #a. Normal Simulation via Plotly
                                               conditionalPanel('input.Exsel == "Normal Simulation via Plotly"',
@@ -509,7 +511,7 @@ plot(cars$speed)
                                  br(),
                                  fluidRow(
                                    column(width = 12,
-                                          box(title = NULL, style = 'background-color: #e8eaf6', width = NULL, height = NULL,
+                                          box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
                                               
                                               sliderInput(inputId = 'LPsel1', label = 'Please Set the Maximum of X-Axis', min = 0, max = 200,
                                                           value = 80, step = 1, ticks = TRUE),
@@ -527,7 +529,7 @@ plot(cars$speed)
                                  ),
                                  fluidRow(
                                    column(width = 12,
-                                          box(title = NULL, style = 'background-color: #9fa8da', width = NULL, height = NULL,
+                                          box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
                                               tags$strong('R code: '),
                                               uiOutput('LPCode'),
                                               br(),
@@ -544,10 +546,10 @@ plot(cars$speed)
                                    sidebarPanel(
                                      tags$head(tags$style(
                                        HTML('#sidebarmap{
-                                                background-color: #f0f4c3;
+                                                background-color: #FFFFFF;
                                             }')
                                      )),
-                                     #box(title = NULL, style = 'background-color: #f0f4c3', width = NULL, height = NULL,
+                                     #box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
                                          id="sidebarmap",
                                         div('Heat maps and contour plots are visualization techniques to show 
                                             data density on a map. They are particularly helpful when you have 
@@ -571,13 +573,12 @@ plot(cars$speed)
                                                                            sliderTextInput(inputId = 'heatmapCol', label = 'Please Select Your Colorscale', 
                                                                                            choices = c('purple+green', 'yellow+red', 'pink+purple', 'white+black'), grid = TRUE)
                                                           )
-                                                          
                                          )
                                      #)
                                    ),
                                    
                                    mainPanel(
-                                     box(title = NULL, style = 'background-color: #dce775', width = NULL, height = NULL,
+                                     box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
                                          conditionalPanel('input.chSel == "Contour Plots"',
                                                           conditionalPanel('input.chSel2 == "Volcano"',
                                                                            tags$b('In this section, we will use an embedded dataset named Volcano. It is a matrix containing 87 rows and 61 columns.'),
@@ -610,10 +611,66 @@ plot(cars$speed)
                                  )
                           )
                   )
-              )
+              ),
+    #######Referencees Tab ###############
+    tabItem(
+      tabName = "References",
+      withMathJax(),
+      h2("References"),
+      
+      p('The Protein-Protein Interaction Dataset is from the Warwick University - Molecular Organisation and Assembly in Cells.'),
+      
+      p(class = "hangingindent",
+        "Attali, D. (2020). 
+  shinyjs: Easily Improve the User Experience of Your Shiny Apps in Seconds, R package. 
+  Available from https://CRAN.R-project.org/package=shinyjs"),
+      p(class = "hangingindent",
+        "Chang, W. and Borges Ribeiro, B. (2018),
+  shinydashboard: Create Dashboards with 'Shiny', R package. 
+  Available from https://CRAN.R-project.org/package=shinydashboard"),
+      p(class = "hangingindent",
+        "Chang, W., Cheng, J., Allaire, J., Xie, Y., and MchPherson, J. (2020),
+  shiny: Web Application Framework for R, R package.
+  Available from https://CRAN.R-project.org/package=shiny"),
+      p(class = "hangingindent",
+        "Bailey, E. (2015). 
+  shinyBS: Twitter Bootstrap Components for Shiny, R package.
+  Available from https://CRAN.R-project.org/package=shinyBS"),
+      p(class = "hangingindent",
+        "Perrier, V., Meyer, F., and Granjon, D. (2020). 
+  shinyWidgets: Custom Inputs Widgets for Shiny, R package. 
+  Available from https://CRAN.R-project.org/package=shinyWidgets"),
+      p(class = "hangingindent",
+        "Sievert, C. (2020).
+  plotly: Interactive Web-Based Data Visualization with R, plotly, and
+  shiny. Chapman and Hall/CRC Florida, 2020."
+      ),
+      p(class = "hangingindent",
+        "Wickham, H., ggplot2: Elegant Graphics for Data Analysis, R package.
+  Springer-Verlag New York, 2016."
+      ),
+      p(class = "hangingindent",
+        "Nijs, V., Fang, F., Trestle Technology, LLC and Allen, J. (2019). 
+  shinyAce: Ace Editor Bindings for Shiny, R package.
+  Available from https://CRAN.R-project.org/package=shinyAce"
+      ),
+      p(class = "hangingindent",
+        "Sali, A. and Attali D. (2020). shinycssloaders: Add CSS Loading
+  Animations to 'shiny' Outputs, R package.
+  https://CRAN.R-project.org/package=shinycssloaders"
+      ),
+      p(class = "hangingindent",
+        "Carey R. (2019). 
+  rlocker: Learning Locker for Shiny, R package. 
+  Available from https://github.com/rpc5102/rlocker"),
+      p(class = "hangingindent",
+        "Carey, R. and Hatfield, N. (2020). boastUtils: BOAST Utilities. R
+  package version 0.1.4.
+  https://github.com/EducationShinyAppTeam/boastUtils"
+      )
+      
+      
+    )
     
   )
-)
-
-shinyUI(dashboardPage(skin = 'green', header, sidebar, body))
-
+)))
