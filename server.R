@@ -15,6 +15,7 @@ library(rmarkdown)
 library(shinyAce)
 library(rlocker)
 library(ggmap)
+library(DT)
 
 bank <- read.csv("questionbank.csv")
 bank = data.frame(lapply(bank, as.character), stringsAsFactors = FALSE)
@@ -41,20 +42,24 @@ shinyServer(function(input, output, session) {
   }
   
   ##############end#########
-  output$Previewcar <-
-    renderTable({
-      head(cars, 4)
-    }, striped = TRUE, hover = TRUE, bordered = TRUE, spacing = 'xs')
-  
-  output$Previewtree <-
-    renderTable({
-      head(trees, 4)
-    }, striped = TRUE, hover = TRUE, bordered = TRUE, spacing = 'xs')
+  output$dataTable <- DT::renderDataTable({
+    if(input$dataset == "cars")
+      cars
+    else
+      trees
+  })
+
+  # formally used this preview to output basic idea. Request at Neil Hatfield
+  #   it was changed
+  # output$Previewtree <-
+  #   renderTable({
+  #     head(trees, 4)
+  #   }, striped = TRUE, hover = TRUE, bordered = TRUE, spacing = 'xs')
   
   output$Previewiris <-
-    renderTable({
-      head(iris, 4)
-    }, striped = TRUE, hover = TRUE, bordered = TRUE, spacing = 'xs')
+    DT::renderDataTable({
+      iris
+    })
   
   ###KNITR
   observeEvent(input$eval, {
@@ -930,6 +935,8 @@ shinyServer(function(input, output, session) {
   #   updateButton(session, "submit", disabled = TRUE)
   # })
   
+
+  
   observeEvent(input$nextq, {
     # updateButton(session, "submit", disabled = FALSE)
     # updateButton(session, "nextq", disabled = TRUE)
@@ -937,9 +944,11 @@ shinyServer(function(input, output, session) {
                       "answer",
                       "pick an answer from below",
                       c("", "A", "B", "C"))
+   
     output$mark <- renderUI({
       img(src = NULL, width = 30)
     })
+    disable("submit")
   })
   
   
@@ -995,9 +1004,8 @@ shinyServer(function(input, output, session) {
     
     # Store statement in locker and return status
     status <- rlocker::store(session, interacted_statement)
+    enable("submit")
     
-    print(interacted_statement) # remove me
-    print(status) # remove me
   })
   
   
