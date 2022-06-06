@@ -1,0 +1,27 @@
+Title: Data_Visualization
+ShortName: Data_visualization
+Date: 2021-06-06
+Lifecycle: experimental
+Authors@R: c(
+  person(given = "Neil", family = "Hatfield", email = "njh5464@psu.edu", role = c("aut", "cre"))
+)
+Chapter: Chapter 11
+Description: 'This app allows students to explore Hasse diagrams as well as build
+their own.'
+LearningObjectives: c(
+  "The student will be able to classify attributes as being a response, factor,
+    block or covariate for a given study context.",
+  "The student will be able to differentiate between various ANOVA models.",
+  "The student will be able to produce a visual representation (e.g., Hasse
+    diagrams, equations) of underlying model for a given situation.",
+  "The student will learn to use technology to his/her advantage when engaged 
+    in data analysis.",
+  "The student will learn to meaningfully discuss data visualizations to support
+    others in their learning about the current context."
+)
+DisplayMode: Normal
+URL: https://psu-eberly.shinyapps.io/Data_Visualization
+BugReports: https://github.com/EducationShinyAppTeam/Data_Visualization/issues
+License: CC-BY-NC-SA-4.0
+Tags: simulation
+Type: Shiny
