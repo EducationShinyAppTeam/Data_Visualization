@@ -13,7 +13,7 @@ library(learnr)
 library(knitr)
 library(rmarkdown)
 library(shinyAce)
-library(rlocker)
+library(rLocker) # change all rlocker to rLocker
 library(ggmap)
 library(DT)
 
@@ -24,12 +24,12 @@ source("helpers.R")
 
 shinyServer(function(input, output, session) {
   # Initialize Learning Locker connection
-  connection <- rlocker::connect(
+  connection <- rLocker::connect(
     session,
     list(
       base_url = "https://learning-locker.stat.vmhost.psu.edu/",
       auth = "Basic ZDQ2OTNhZWZhN2Q0ODRhYTU4OTFmOTlhNWE1YzBkMjQxMjFmMGZiZjo4N2IwYzc3Mjc1MzU3MWZkMzc1ZDliY2YzOTNjMGZiNzcxOThiYWU2",
-      agent = rlocker::createAgent()
+      agent = rLocker::createAgent()
     )
   )
   
@@ -988,7 +988,7 @@ shinyServer(function(input, output, session) {
   observeEvent(input$answer, {
     req(input$answer, input$answer != '')
     answer <- isolate(input$answer)
-    interacted_statement <- rlocker::createStatement(list(
+    interacted_statement <- rLocker::createStatement(list( #change
       verb = list(display = "interacted"),
       object = list(
         id = paste0(getCurrentAddress(session), "#", value$index),
@@ -1003,7 +1003,7 @@ shinyServer(function(input, output, session) {
     ))
     
     # Store statement in locker and return status
-    status <- rlocker::store(session, interacted_statement)
+    status <- rLocker::store(session, interacted_statement)
     enable("submit")
     
   })
@@ -1038,7 +1038,7 @@ shinyServer(function(input, output, session) {
     
     answer <- isolate(input$answer)
     
-    statement <- rlocker::createStatement(list(
+    statement <- rLocker::createStatement(list(
       verb = list(display = "answered"),
       object = list(
         id = paste0(getCurrentAddress(session), "#", value$index),
@@ -1052,7 +1052,7 @@ shinyServer(function(input, output, session) {
     ))
     
     # Store statement in locker and return status
-    status <- rlocker::store(session, statement)
+    status <- rLocker::store(session, statement)
     
     print(statement) # remove me
     print(status) # remove me
