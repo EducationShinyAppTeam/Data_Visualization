@@ -20,6 +20,7 @@ library(knitr)
 library(rmarkdown)
 library(shinyAce)
 library(ggmap)
+library(rLocker)
 
 source("helpers.R")
 
@@ -97,7 +98,7 @@ ui <- list(
                                            h1(strong('One Variable Visualization')),
                                            # br(),
                                            p('This section illustrates R code for data
-                                    visulization includes plot() and ggplot() with one Variable'),
+                                    visualization includes plot() and ggplot() with one Variable'),
 
                                     br(),
                                     sidebarLayout(
@@ -192,10 +193,10 @@ ui <- list(
 
                                   ###### Two Variable ######
                                   tabPanel(title='Two Variables', value='panel2',
-                                           h3(strong('Two Variables Visualization')),
+                                           h1(strong('Two Variables Visualization')),#change h3 to h1
                                            # br(),
-                                           h4('This section illustrates R code for data
-                                    visulization uses ggplot() with Two Variables'),
+                                           p('This section illustrates R code for data
+                                    visualization uses ggplot() with Two Variables'), #change h4 to p
 
                                     br(),
                                     sidebarLayout(
@@ -633,54 +634,49 @@ tabItem(
   p('The Protein-Protein Interaction Dataset is from the Warwick University - Molecular Organisation and Assembly in Cells.'),
 
   p(class = "hangingindent",
-    "Attali, D. (2020).
-  shinyjs: Easily Improve the User Experience of Your Shiny Apps in Seconds, R package.
+    "Attali, D. (2020). 
+  shinyjs: Easily Improve the User Experience of Your Shiny Apps in Seconds, R package. 
   Available from https://CRAN.R-project.org/package=shinyjs"),
   p(class = "hangingindent",
+    "Bailey, E. (2015). 
+  shinyBS: Twitter Bootstrap Components for Shiny, R package.
+  Available from https://CRAN.R-project.org/package=shinyBS"),
+  p(class = "hangingindent",
+    "Carey R. (2019). 
+  rlocker: Learning Locker for Shiny, R package. 
+  Available from https://github.com/rpc5102/rlocker"),
+  p(class = "hangingindent",
+    "Carey, R. and Hatfield, N. (2020). boastUtils: BOAST Utilities. R
+  package version 0.1.4.
+  https://github.com/EducationShinyAppTeam/boastUtils"),
+  p(class = "hangingindent",
     "Chang, W. and Borges Ribeiro, B. (2018),
-  shinydashboard: Create Dashboards with 'Shiny', R package.
+  shinydashboard: Create Dashboards with 'Shiny', R package. 
   Available from https://CRAN.R-project.org/package=shinydashboard"),
   p(class = "hangingindent",
     "Chang, W., Cheng, J., Allaire, J., Xie, Y., and MchPherson, J. (2020),
   shiny: Web Application Framework for R, R package.
   Available from https://CRAN.R-project.org/package=shiny"),
   p(class = "hangingindent",
-    "Bailey, E. (2015).
-  shinyBS: Twitter Bootstrap Components for Shiny, R package.
-  Available from https://CRAN.R-project.org/package=shinyBS"),
-  p(class = "hangingindent",
-    "Perrier, V., Meyer, F., and Granjon, D. (2020).
-  shinyWidgets: Custom Inputs Widgets for Shiny, R package.
-  Available from https://CRAN.R-project.org/package=shinyWidgets"),
-  p(class = "hangingindent",
-    "Sievert, C. (2020).
-  plotly: Interactive Web-Based Data Visualization with R, plotly, and
-  shiny. Chapman and Hall/CRC Florida, 2020."
-  ),
-  p(class = "hangingindent",
-    "Wickham, H., ggplot2: Elegant Graphics for Data Analysis, R package.
-  Springer-Verlag New York, 2016."
-  ),
-  p(class = "hangingindent",
-    "Nijs, V., Fang, F., Trestle Technology, LLC and Allen, J. (2019).
+    "Nijs, V., Fang, F., Trestle Technology, LLC and Allen, J. (2019). 
   shinyAce: Ace Editor Bindings for Shiny, R package.
-  Available from https://CRAN.R-project.org/package=shinyAce"
-  ),
+  Available from https://CRAN.R-project.org/package=shinyAce"),
+  p(class = "hangingindent",
+    "Perrier, V., Meyer, F., and Granjon, D. (2020). 
+  shinyWidgets: Custom Inputs Widgets for Shiny, R package. 
+  Available from https://CRAN.R-project.org/package=shinyWidgets"),
   p(class = "hangingindent",
     "Sali, A. and Attali D. (2020). shinycssloaders: Add CSS Loading
   Animations to 'shiny' Outputs, R package.
-  https://CRAN.R-project.org/package=shinycssloaders"
-  ),
+  https://CRAN.R-project.org/package=shinycssloaders"),
   p(class = "hangingindent",
-    "Carey R. (2019).
-  rlocker: Learning Locker for Shiny, R package.
-  Available from https://github.com/rpc5102/rlocker"),
+    "Sievert, C. (2020).
+  plotly: Interactive Web-Based Data Visualization with R, plotly, and
+  shiny. Chapman and Hall/CRC Florida, 2020."),
   p(class = "hangingindent",
-    "Carey, R. and Hatfield, N. (2020). boastUtils: BOAST Utilities. R
-  package version 0.1.4.
-  https://github.com/EducationShinyAppTeam/boastUtils"
+    "Wickham, H., ggplot2: Elegant Graphics for Data Analysis, R package.
+  Springer-Verlag New York, 2016."
   )
-
 
 )
 
@@ -707,21 +703,31 @@ server <- function(input, output, session) {
   # }
 
   ##############end#########
-  output$Previewcar <-
-    renderTable({
-      head(cars, 4)
-    }, striped = TRUE, hover = TRUE, bordered = TRUE, spacing = 'xs')
+  output$dataTable <- DT::renderDataTable({
+    if(input$dataset == "cars")
+      cars
+    else
+      trees
+  })
+  
+  #output$Previewcar <- #previous
+    #renderTable({
+      #head(cars, 4)
+    #}, striped = TRUE, hover = TRUE, bordered = TRUE, spacing = 'xs')
 
-  output$Previewtree <-
-    renderTable({
-      head(trees, 4)
-    }, striped = TRUE, hover = TRUE, bordered = TRUE, spacing = 'xs')
+  #output$Previewtree <- #previous
+    #renderTable({
+      #head(trees, 4)
+    #}, striped = TRUE, hover = TRUE, bordered = TRUE, spacing = 'xs')
 
+  #output$Previewiris <- #previous
+    #renderTable({
+      #head(iris, 4)
+    #}, striped = TRUE, hover = TRUE, bordered = TRUE, spacing = 'xs')
   output$Previewiris <-
-    renderTable({
-      head(iris, 4)
-    }, striped = TRUE, hover = TRUE, bordered = TRUE, spacing = 'xs')
-
+    DT::renderDataTable({
+      iris
+    }) 
   ###KNITR
   observeEvent(input$eval, {
     withBusyIndicatorServer("eval", {
@@ -1603,9 +1609,11 @@ server <- function(input, output, session) {
                       "answer",
                       "pick an answer from below",
                       c("", "A", "B", "C"))
+    
     output$mark <- renderUI({
       img(src = NULL, width = 30)
     })
+    disable("submit")
   })
 
 
@@ -1642,29 +1650,30 @@ server <- function(input, output, session) {
   })
 
 
-  # observeEvent(input$answer, {
-  #   req(input$answer, input$answer != '')
-  #   answer <- isolate(input$answer)
-  #   interacted_statement <- rlocker::createStatement(list(
-  #     verb = list(display = "interacted"),
-  #     object = list(
-  #       id = paste0(getCurrentAddress(session), "#", value$index),
-  #       name = paste('Question', value$index),
-  #       description = bank[value$index, 2]
-  #
-  #     ),
-  #     result = list(
-  #       success = NA,
-  #       response = paste(getResponseText(value$index, answer))
-  #     )
-  #   ))
-  #
-  #   # Store statement in locker and return status
-  #   status <- rlocker::store(session, interacted_statement)
-  #
-  #   print(interacted_statement) # remove me
-  #   print(status) # remove me
-  # })
+  observeEvent(input$answer, {
+     req(input$answer, input$answer != '')
+     answer <- isolate(input$answer)
+     interacted_statement <- rLocker::createStatement(list(
+       verb = list(display = "interacted"),
+       object = list(
+         id = paste0(getCurrentAddress(session), "#", value$index),
+         name = paste('Question', value$index),
+         description = bank[value$index, 2]
+  
+       ),
+       result = list(
+         success = NA,
+         response = paste(getResponseText(value$index, answer))
+       )
+     ))
+  
+     # Store statement in locker and return status
+     status <- rLocker::store(session, interacted_statement)
+     enable("submit") #change
+  
+     #print(interacted_statement) # remove me
+     #print(status) # remove me
+   })
 
 
   getResponseText <- function(index, answer) {
@@ -1696,24 +1705,24 @@ server <- function(input, output, session) {
 
     answer <- isolate(input$answer)
 
-    # statement <- rlocker::createStatement(list(
-    #   verb = list(display = "answered"),
-    #   object = list(
-    #     id = paste0(getCurrentAddress(session), "#", value$index),
-    #     name = paste('Question', value$index),
-    #     description = bank[value$index, 2]
-    #   ),
-    #   result = list(
-    #     success = any(answer == ans[value$index, 1]),
-    #     response = paste(getResponseText(value$index, answer))
-    #   )
-    # ))
+    statement <- rLocker::createStatement(list(
+      verb = list(display = "answered"),
+      object = list(
+        id = paste0(getCurrentAddress(session), "#", value$index),
+        name = paste('Question', value$index),
+        description = bank[value$index, 2]
+      ),
+      result = list(
+        success = any(answer == ans[value$index, 1]),
+        response = paste(getResponseText(value$index, answer))
+      )
+    ))
     #
     # # Store statement in locker and return status
-    # status <- rlocker::store(session, statement)
-    #
-    # print(statement) # remove me
-    # print(status) # remove me
+    status <- rLocker::store(session, statement)
+    
+    print(statement) # remove me
+    print(status) # remove me
 
     output$mark <- renderUI({
       if (any(answer == ans[value$index, 1])) {
