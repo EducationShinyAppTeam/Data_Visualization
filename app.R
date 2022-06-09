@@ -31,6 +31,10 @@ ui <- list(
   dashboardPage(skin = "green",
                 header = dashboardHeader(title = 'Data Visualization',
                                          tags$li(class = "dropdown", actionLink("info", icon("info"), class = "myClass")),
+                                         tags$li(
+                                           class = "dropdown",
+                                           boastUtils::surveyLink(name = "Data_Visualization")
+                                         ), # add this one
                                          tags$li(class = "dropdown",tags$a(href = "https://shinyapps.science.psu.edu/",
                                                                            icon("home")))
                 ),
@@ -86,7 +90,7 @@ ui <- list(
 
               tabItem(tabName = 'VisualOne',
                       # div(style="display: inline-block;vertical-align:top;",
-                      #     tags$a(href='https://shinyapps.science.psu.edu/',tags$img(src='homebut.PNG', width = 19))
+                        # tags$a(href='https://shinyapps.science.psu.edu/',tags$img(src='homebut.PNG', width = 19))
                       # ),
                       # div(style="display: inline-block;vertical-align:top;",
                       #     circleButton("info0",icon = icon("info"), status = "myClass",size = "xs")
@@ -95,7 +99,7 @@ ui <- list(
                       tabsetPanel(type = 'tabs',
                                   ###### One Variable ######
                                   tabPanel('Single Variable',
-                                           h1(strong('One Variable Visualization')),
+                                           h2('One Variable Visualization'),
                                            # br(),
                                            p('This section illustrates R code for data
                                     visualization includes plot() and ggplot() with one Variable'),
@@ -137,11 +141,11 @@ ui <- list(
                                                       choices = c("Girth", "Height", "Volume"),
                                                       selected = 'Girth')
                                         )
-                                        #tags$img(src="DataView.pdf")
-                                        #includeHTML("ViewData.nb.html")
-                                        #tags$a(tags$img(src="pdficon.png"), href="DataView.pdf", download="Viewdata.pdf")
-                                        # br(),
-                                        #downloadLink("downloadData", "Preview of Data"),
+                                        #tags$img(src="DataView.pdf"),
+                                        #includeHTML("ViewData.nb.html"),
+                                        #tags$a(tags$img(src="pdficon.png"), href="DataView.pdf", download="Viewdata.pdf"),
+                                        #br(),
+                                        #downloadLink("downloadData", "Preview of Data")
 
                                       ),
 
@@ -159,7 +163,7 @@ ui <- list(
                                           column(6,plotOutput(outputId="oneDensity", width="100%",height="300px")%>% withSpinner(color="#FFFFFF")),
                                           column(6,plotOutput(outputId="onehist", width="100%",height="300px")%>% withSpinner(color="#FFFFFF"))
                                         ),
-                                        fluidRow(
+                                        fluidRow( # code
                                           column(width = 6, textOutput(outputId="DensityoneCode")),
                                           column(width = 6, textOutput(outputId="HistogramoneCode"))
                                         ),
@@ -169,7 +173,7 @@ ui <- list(
                                         br(),
                                         tags$head(tags$style("#qqCode, #BarCode, #DensityoneCode, #HistogramoneCode,
                                                           #twoscattercode, #logTransformationCode, #twobarcode, #twoboxcode
-                                                          {color: #FFFFFF}"
+                                                          #{color: #FFFFFF}"
                                         )),
 
 
@@ -193,7 +197,7 @@ ui <- list(
 
                                   ###### Two Variable ######
                                   tabPanel(title='Two Variables', value='panel2',
-                                           h1(strong('Two Variables Visualization')),#change h3 to h1
+                                           h2('Two Variables Visualization'),#change h3 to h1
                                            # br(),
                                            p('This section illustrates R code for data
                                     visualization uses ggplot() with Two Variables'), #change h4 to p
@@ -242,7 +246,7 @@ ui <- list(
                                           column(6,plotOutput(outputId="twoscatter")%>% withSpinner(color="#FFFFFF")),
                                           column(6,plotOutput(outputId="logTransformation")%>% withSpinner(color="#FFFFFF"))
                                         ),
-                                        br(),
+                                        #br(),
                                         fluidRow(
                                           column(6,textOutput(outputId="twoscattercode")),
                                           column(6,textOutput(outputId="logTransformationCode"))
@@ -252,7 +256,7 @@ ui <- list(
                                           column(6,plotOutput(outputId="twobar")%>% withSpinner(color="#FFFFFF")),
                                           column(6,plotOutput(outputId="twobox")%>% withSpinner(color="#FFFFFF"))
                                         ),
-                                        br(),
+                                        #br(),
                                         fluidRow(
                                           column(6,textOutput(outputId="twobarcode")),
                                           column(6,textOutput(outputId="twoboxcode"))
@@ -676,7 +680,11 @@ tabItem(
   p(class = "hangingindent",
     "Wickham, H., ggplot2: Elegant Graphics for Data Analysis, R package.
   Springer-Verlag New York, 2016."
-  )
+  ), # add ,
+  br(), # add
+  br(), #add
+  br(), #add
+  boastUtils::copyrightInfo() # add
 
 )
 
@@ -1092,7 +1100,7 @@ server <- function(input, output, session) {
             qqline(cars$dist, col = 'red')
           }
           else if (input$plotType == 'ggplot') {
-            ggplot(aes(sample = dist), data = cars) +
+            ggplot(aes(sample = dist), data = cars) + 
               stat_qq(color = "darkblue",
                       fill = "lightblue",
                       alpha = 0.4) +
