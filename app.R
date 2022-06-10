@@ -20,7 +20,7 @@ library(knitr)
 library(rmarkdown)
 library(shinyAce)
 library(ggmap)
-library(rLocker)
+#library(rLocker)
 
 source("helpers.R")
 
@@ -1661,22 +1661,23 @@ server <- function(input, output, session) {
   observeEvent(input$answer, {
      req(input$answer, input$answer != '')
      answer <- isolate(input$answer)
-     interacted_statement <- rLocker::createStatement(list(
-       verb = list(display = "interacted"),
-       object = list(
-         id = paste0(getCurrentAddress(session), "#", value$index),
-         name = paste('Question', value$index),
-         description = bank[value$index, 2]
+     #interacted_statement <- rLocker::createStatement(list(  #add # to 1677 
+       #verb = list(display = "interacted"),
+       #object = list(
+         #id = paste0(getCurrentAddress(session), "#", value$index),
+         #name = paste('Question', value$index),
+         #description = bank[value$index, 2]
   
-       ),
-       result = list(
-         success = NA,
-         response = paste(getResponseText(value$index, answer))
-       )
-     ))
+       #),
+       #result = list(
+         #success = NA,
+         #response = paste(getResponseText(value$index, answer))
+       #)
+     #)
+  #)
   
      # Store statement in locker and return status
-     status <- rLocker::store(session, interacted_statement)
+     #status <- rLocker::store(session, interacted_statement)
      enable("submit") #change
   
      #print(interacted_statement) # remove me
@@ -1713,24 +1714,24 @@ server <- function(input, output, session) {
 
     answer <- isolate(input$answer)
 
-    statement <- rLocker::createStatement(list(
-      verb = list(display = "answered"),
-      object = list(
-        id = paste0(getCurrentAddress(session), "#", value$index),
-        name = paste('Question', value$index),
-        description = bank[value$index, 2]
-      ),
-      result = list(
-        success = any(answer == ans[value$index, 1]),
-        response = paste(getResponseText(value$index, answer))
-      )
-    ))
+    #statement <- rLocker::createStatement(list( # add # to 1728
+      #verb = list(display = "answered"),
+      #object = list(
+        #id = paste0(getCurrentAddress(session), "#", value$index),
+        #name = paste('Question', value$index),
+        #description = bank[value$index, 2]
+      #),
+      #result = list(
+        #success = any(answer == ans[value$index, 1]),
+        #response = paste(getResponseText(value$index, answer))
+      #)
+    #))
     #
     # # Store statement in locker and return status
-    status <- rLocker::store(session, statement)
+    #status <- rLocker::store(session, statement) # add #
     
-    print(statement) # remove me
-    print(status) # remove me
+    #print(statement) # remove me # add #
+    #print(status) # remove me # add #
 
     output$mark <- renderUI({
       if (any(answer == ans[value$index, 1])) {
