@@ -41,19 +41,20 @@ ui <- list(
 
                 sidebar = dashboardSidebar(
                   width = 250,
-                  sidebarMenu(id = 'tabs',
-                              menuItem('Overview', tabName = 'overview', icon = icon("dashboard")),
-                              menuItem('Simple Data Visualization', tabName = 'VisualOne',
-                                       icon = icon('wpexplorer')),
-                              menuItem('Advanced Data Visualization', tabName = 'exp4', icon = icon('wpexplorer')),
-                              menuItem('References', tabName = "References", icon = icon("leanpub"))
+                  sidebarMenu(
+                    id = 'pages',
+                    menuItem('Overview', tabName = 'overview', icon = icon("tachometer-alt")),
+                    menuItem('Simple Data Visualization', tabName = 'VisualOne',
+                             icon = icon('wpexplorer')),
+                    menuItem('Adv. Data Visualization', tabName = 'exp4', icon = icon('wpexplorer')),
+                    menuItem('References', tabName = "References", icon = icon("leanpub"))
                   ),
                   #PSU logo
                   tags$div(class = "sidebar-logo",
                            boastUtils::psu_eberly_logo("reversed"))
                 ),
 
-                body = dashboardBody(
+                dashboardBody(
                   tags$head(
                     tags$link(rel = "stylesheet", type = "text/css", href = "https://educationshinyappteam.github.io/Style_Guide/theme/boast.css")
                   ),
@@ -64,25 +65,27 @@ ui <- list(
                     tabItem(tabName = 'overview',
                             h1('Data Visualization App'),
                             br(),
-                            h2(strong('About:')),
+                            h2('About:'),
                             p('This app illustrates R code for data visualization.'),
                             br(),
-
-                            h2(strong('Instructions:')),
-                            p(tags$li("Simple data visualization section introduces
-                       how to create some commonly used plots with ggplot and Rplot with exercises at the end.")),
-                       p(tags$li("Advanced Data Visualization section
-                      introduces 3D plots, line plots, contour plots, and heat maps.")),
+                            h2('Instructions'),
+                            tags$ol(
+                              tags$li("Simple data visualization section introduces
+                       how to create some commonly used plots with ggplot and Rplot with exercises at the end."),
+                              tags$li("Advanced Data Visualization section
+                      introduces 3D plots, line plots, contour plots, and heat maps.")
+                            ),
                       br(),
                       div(style = 'text-align: center',
                           bsButton(inputId = 'go2', label = 'Explore',
                                    icon = icon('bolt'), size = 'large', class='circle grow')),
                       br(),
-                      h2(strong('Acknowledgements:')),
+                      h2('Acknowledgements'),
                       p('This application was coded and developed by Anna (Yinqi) Zhang in 2018 and Yiyun Gong in 2019.
                Special Thanks to Grace (Yubaihe) Zhou for being incredibly helpful with programming issues.
               It was updated for formatting by Ethan Wright 2020'),
-              div(class = "updated", "Last Update: 9/4/2020 by EJW.")
+              div(
+                class = "updated", "Last Update: 6/12/2022 by YY.")
                     ),
 
               ############ Data Visualization Introduction #######
@@ -163,9 +166,12 @@ ui <- list(
                                           column(6,plotOutput(outputId="oneDensity", width="100%",height="300px")%>% withSpinner(color="#FFFFFF")),
                                           column(6,plotOutput(outputId="onehist", width="100%",height="300px")%>% withSpinner(color="#FFFFFF"))
                                         ),
+                                        tags$strong('R Code: '),
+                                        br(),
+                                        br(),
                                         fluidRow( # code
-                                          column(width = 6, textOutput(outputId="DensityoneCode")),
-                                          column(width = 6, textOutput(outputId="HistogramoneCode"))
+                                          column(width = 6, uiOutput(outputId="DensityoneCode")),
+                                          column(width = 6, uiOutput(outputId="HistogramoneCode"))
                                         ),
                                         br(),
                                         br(),
@@ -181,9 +187,12 @@ ui <- list(
                                           column(6,plotOutput(outputId="onebar", width="100%",height="300px")%>% withSpinner(color="#1E7B14")),
                                           column(6,plotOutput(outputId="oneqq", width="100%",height="300px")%>% withSpinner(color="#1E7B14"))
                                         ),
+                                        tags$strong('R Code: '),
+                                        br(),
+                                        br(),
                                         fluidRow(
-                                          column(width = 6, textOutput(outputId="BarCode")),
-                                          column(width = 6, textOutput(outputId="qqCode"))
+                                          column(width = 6, uiOutput(outputId="BarCode")),
+                                          column(width = 6, uiOutput(outputId="qqCode"))
                                         ),
                                         br(),
                                         br()
@@ -247,9 +256,12 @@ ui <- list(
                                           column(6,plotOutput(outputId="logTransformation")%>% withSpinner(color="#FFFFFF"))
                                         ),
                                         #br(),
+                                        tags$strong('R Code: '),
+                                        br(),
+                                        br(),
                                         fluidRow(
-                                          column(6,textOutput(outputId="twoscattercode")),
-                                          column(6,textOutput(outputId="logTransformationCode"))
+                                          column(6,uiOutput(outputId="twoscattercode")),
+                                          column(6,uiOutput(outputId="logTransformationCode"))
                                         ),
                                         br(),
                                         fluidRow(
@@ -257,9 +269,12 @@ ui <- list(
                                           column(6,plotOutput(outputId="twobox")%>% withSpinner(color="#FFFFFF"))
                                         ),
                                         #br(),
+                                        tags$strong('R Code: '),
+                                        br(),
+                                        br(),
                                         fluidRow(
-                                          column(6,textOutput(outputId="twobarcode")),
-                                          column(6,textOutput(outputId="twoboxcode"))
+                                          column(6,uiOutput(outputId="twobarcode")),
+                                          column(6,uiOutput(outputId="twoboxcode"))
                                         )
                                       )
                                     )
@@ -788,7 +803,7 @@ server <- function(input, output, session) {
     )
   })
   observeEvent(input$go2, {
-    updateTabItems(session, 'tabs', 'VisualOne')
+    updateTabItems(session, 'pages', 'VisualOne')
   })
 
   observeEvent(input$next2, {
@@ -1156,11 +1171,10 @@ server <- function(input, output, session) {
            input$treesVariable)
     })
 
-  output$DensityoneCode <- renderText({
+  output$DensityoneCode <- renderUI({ 
     if (input$dataset == 'cars') {
       if (input$plotType == 'plot') {
-        paste(
-          'R Code:',
+        tags$code(
           'plot(density(',
           input$dataset,
           '$',
@@ -1207,16 +1221,16 @@ server <- function(input, output, session) {
     }
   })
 
-  output$HistogramoneCode <- renderText({
+  output$HistogramoneCode <- renderUI({
     if (input$dataset == 'cars') {
       if (input$plotType == 'plot') {
-        paste('R Code:',
-              'hist(',
-              input$dataset,
-              '$',
-              input$carsVariable,
-              ')',
-              seq = '')
+        tags$code(
+          'hist(',
+          input$dataset,
+          '$',
+          input$carsVariable,
+          ')',
+          seq = '')
       }
       else{
         paste(
@@ -1254,16 +1268,16 @@ server <- function(input, output, session) {
     }
   })
 
-  output$BarCode <- renderText({
+  output$BarCode <- renderUI({
     if (input$dataset == 'cars') {
       if (input$plotType == 'plot') {
-        paste('R Code:',
-              'barplot(',
-              input$dataset,
-              '$',
-              input$carsVariable,
-              ')',
-              seq = '')
+        tags$code(
+          'barplot(',
+          input$dataset,
+          '$',
+          input$carsVariable,
+          ')',
+          seq = '')
       }
       else{
         paste(
@@ -1303,11 +1317,10 @@ server <- function(input, output, session) {
     }
   })
 
-  output$qqCode <- renderText({
+  output$qqCode <- renderUI({
     if (input$dataset == 'cars') {
       if (input$plotType == 'plot') {
-        paste0(
-          'R Code: ',
+        tags$code(
           'qqnorm(',
           input$dataset,
           '$',
@@ -1542,9 +1555,8 @@ server <- function(input, output, session) {
     list(input$continuous1, input$continuous2)
   })
 
-  output$twoscattercode <- renderText({
-    paste(
-      'R Code:',
+  output$twoscattercode <- renderUI({
+    tags$code(
       "ggplot(aes(",
       input$continuous1,
       ',',
@@ -1557,9 +1569,8 @@ server <- function(input, output, session) {
     )
   })
 
-  output$logTransformationCode <- renderText({
-    paste(
-      'R Code:',
+  output$logTransformationCode <- renderUI({
+    tags$code(
       "ggplot(aes(",
       input$continuous1,
       ',',
@@ -1572,9 +1583,8 @@ server <- function(input, output, session) {
     )
   })
 
-  output$twobarcode <- renderText({
-    paste(
-      'R Code:',
+  output$twobarcode <- renderUI({
+    tags$code(
       "ggplot(data=iris, aes(",
       input$continuous1,
       ',',
@@ -1586,9 +1596,8 @@ server <- function(input, output, session) {
     )
   })
 
-  output$twoboxcode <- renderText({
-    paste(
-      'R Code:',
+  output$twoboxcode <- renderUI({
+    tags$code(
       "ggplot(data=iris, aes(",
       input$continuous1,
       ',',
@@ -1733,17 +1742,23 @@ server <- function(input, output, session) {
     #print(statement) # remove me # add #
     #print(status) # remove me # add #
 
-    output$mark <- renderUI({
-      if (any(answer == ans[value$index, 1])) {
-        img(src = "correct.png", width = 30)
-      }
-      else{
-        ig <- img(src = "incorrect.png", width = 30)
-        w <-
-          paste("You picked", answer, ", The correct answer is", ans[value$index, 1])
-        HTML(paste(ig, w), sep = ' ')
-      }
-    })
+    output$mark <- boastUtils::renderIcon(
+        icon = ifelse(any(answer == ans[value$index, 1]),
+                      "correct",
+                      "incorrect"),
+        width = 50)
+    
+    #output$mark <- renderUI({
+      #if (any(answer == ans[value$index, 1])) {
+        #img(src = "correct.png", width = 30)
+      #}
+      #else{
+        #ig <- img(src = "incorrect.png", width = 30)
+        #w <-
+          #paste("You picked", answer, ", The correct answer is", ans[value$index, 1])
+        #HTML(paste(ig, w), sep = ' ')
+      #}
+    #})
   })
 
   observeEvent(input$reset, {
