@@ -39,7 +39,7 @@ ui <- list(
                                                                            icon("home")))
                 ),
 
-                sidebar = dashboardSidebar(
+                dashboardSidebar(
                   width = 250,
                   sidebarMenu(
                     id = 'pages',
@@ -120,7 +120,7 @@ ui <- list(
                                         checkboxInput("previewData", "Preview of Datasets"),
 
                                         ####select between plot and ggplot
-                                        selectInput(inputId="plotType", label="Select Plot Package",
+                                        selectInput(inputId="plotType", label="Select Plot Method",
                                                     choices = c('plot', 'ggplot'),
                                                     selected = 'plot'),
 
@@ -163,36 +163,45 @@ ui <- list(
                                           )
                                         ),
                                         fluidRow(
-                                          column(6,plotOutput(outputId="oneDensity", width="100%",height="300px")%>% withSpinner(color="#FFFFFF")),
-                                          column(6,plotOutput(outputId="onehist", width="100%",height="300px")%>% withSpinner(color="#FFFFFF"))
+                                          column(6,plotOutput(outputId="oneDensity", width="180%",height="350px")%>% withSpinner(color="#FFFFFF")),
                                         ),
                                         tags$strong('R Code: '),
-                                        br(),
-                                        br(),
                                         fluidRow( # code
-                                          column(width = 6, uiOutput(outputId="DensityoneCode")),
-                                          column(width = 6, uiOutput(outputId="HistogramoneCode"))
+                                          column(width = 10, uiOutput(outputId="DensityoneCode")),
+                                          #column(width = 6, uiOutput(outputId="HistogramoneCode"))
                                         ),
                                         br(),
                                         br(),
-                                        br(),
-                                        br(),
-                                        tags$head(tags$style("#qqCode, #BarCode, #DensityoneCode, #HistogramoneCode,
-                                                          #twoscattercode, #logTransformationCode, #twobarcode, #twoboxcode
-                                                          #{color: #FFFFFF}"
-                                        )),
-
-
                                         fluidRow(
-                                          column(6,plotOutput(outputId="onebar", width="100%",height="300px")%>% withSpinner(color="#1E7B14")),
-                                          column(6,plotOutput(outputId="oneqq", width="100%",height="300px")%>% withSpinner(color="#1E7B14"))
+                                          #column(6,plotOutput(outputId="oneDensity", width="100%",height="300px")%>% withSpinner(color="#FFFFFF")),
+                                          column(6,plotOutput(outputId="onehist", width="180%",height="350px")%>% withSpinner(color="#FFFFFF"))
                                         ),
                                         tags$strong('R Code: '),
+                                        fluidRow( # code
+                                          #column(width = 6, uiOutput(outputId="DensityoneCode")),
+                                          column(width = 10, uiOutput(outputId="HistogramoneCode"))
+                                        ),
                                         br(),
                                         br(),
                                         fluidRow(
-                                          column(width = 6, uiOutput(outputId="BarCode")),
-                                          column(width = 6, uiOutput(outputId="qqCode"))
+                                          column(6,plotOutput(outputId="onebar", width="180%",height="350px")%>% withSpinner(color="#1E7B14")),
+                                          #column(6,plotOutput(outputId="oneqq", width="100%",height="300px")%>% withSpinner(color="#1E7B14"))
+                                        ),
+                                        tags$strong('R Code: '),
+                                        fluidRow(
+                                          column(width = 10, uiOutput(outputId="BarCode")),
+                                          #column(width = 6, uiOutput(outputId="qqCode"))
+                                        ),
+                                        br(),
+                                        br(),
+                                        fluidRow(
+                                          #column(6,plotOutput(outputId="onebar", width="100%",height="300px")%>% withSpinner(color="#1E7B14")),
+                                          column(6,plotOutput(outputId="oneqq", width="180%",height="350px")%>% withSpinner(color="#1E7B14"))
+                                        ),
+                                        tags$strong('R Code: '),
+                                        fluidRow(
+                                          #column(width = 6, uiOutput(outputId="BarCode")),
+                                          column(width = 10, uiOutput(outputId="qqCode"))
                                         ),
                                         br(),
                                         br()
@@ -252,29 +261,47 @@ ui <- list(
                                           #p("First four rows of dataset iris")
                                         ),
                                         fluidRow(
-                                          column(6,plotOutput(outputId="twoscatter")%>% withSpinner(color="#FFFFFF")),
-                                          column(6,plotOutput(outputId="logTransformation")%>% withSpinner(color="#FFFFFF"))
+                                          column(6,plotOutput(outputId="twoscatter", width="200%", height="350px")%>% withSpinner(color="#FFFFFF")),
+                                          #column(6,plotOutput(outputId="logTransformation")%>% withSpinner(color="#FFFFFF"))
                                         ),
                                         #br(),
                                         tags$strong('R Code: '),
+                                        fluidRow(
+                                          column(width = 10, uiOutput(outputId="twoscattercode")),
+                                          #column(6,uiOutput(outputId="logTransformationCode"))
+                                        ),
                                         br(),
                                         br(),
                                         fluidRow(
-                                          column(6,uiOutput(outputId="twoscattercode")),
-                                          column(6,uiOutput(outputId="logTransformationCode"))
+                                          #column(6,plotOutput(outputId="twoscatter")%>% withSpinner(color="#FFFFFF")),
+                                          column(6,plotOutput(outputId="logTransformation", width="200%",height="350px")%>% withSpinner(color="#FFFFFF"))
                                         ),
-                                        br(),
-                                        fluidRow(
-                                          column(6,plotOutput(outputId="twobar")%>% withSpinner(color="#FFFFFF")),
-                                          column(6,plotOutput(outputId="twobox")%>% withSpinner(color="#FFFFFF"))
-                                        ),
-                                        #br(),
                                         tags$strong('R Code: '),
+                                        fluidRow(
+                                          #column(6,uiOutput(outputId="twoscattercode")),
+                                          column(width = 10, uiOutput(outputId="logTransformationCode"))
+                                        ),
                                         br(),
                                         br(),
                                         fluidRow(
-                                          column(6,uiOutput(outputId="twobarcode")),
-                                          column(6,uiOutput(outputId="twoboxcode"))
+                                          column(6,plotOutput(outputId="twobar", width="200%",height="350px")%>% withSpinner(color="#FFFFFF")),
+                                          #column(6,plotOutput(outputId="twobox")%>% withSpinner(color="#FFFFFF"))
+                                        ),
+                                        tags$strong('R Code: '),
+                                        fluidRow(
+                                          column(width = 10, uiOutput(outputId="twobarcode")),
+                                          #column(6,uiOutput(outputId="twoboxcode"))
+                                        ),
+                                        br(),
+                                        br(),
+                                        fluidRow(
+                                          #column(6,plotOutput(outputId="twobar")%>% withSpinner(color="#FFFFFF")),
+                                          column(6,plotOutput(outputId="twobox", width="200%",height="350px")%>% withSpinner(color="#FFFFFF"))
+                                        ),
+                                        tags$strong('R Code: '),
+                                        fluidRow(
+                                          #column(6,uiOutput(outputId="twobarcode")),
+                                          column(width = 10, uiOutput(outputId="twoboxcode"))
                                         )
                                       )
                                     )
@@ -1176,16 +1203,15 @@ server <- function(input, output, session) {
       if (input$plotType == 'plot') {
         tags$code(
           'plot(density(',
-          input$dataset,
-          '$',
           input$carsVariable,
+          ', data =',
+          input$dataset,
           '))',
           seq = ''
         )
       }
       else if (input$plotType == 'ggplot') {
-        paste(
-          'R Code:',
+        tags$code(
           "ggplot(aes(",
           input$carsVariable,
           "), data=cars)+
@@ -1197,8 +1223,7 @@ server <- function(input, output, session) {
     }
     else{
       if (input$plotType == 'plot') {
-        paste(
-          'R Code:',
+        tags$code(
           'plot(density(',
           input$dataset,
           '$',
@@ -1208,8 +1233,7 @@ server <- function(input, output, session) {
         )
       }
       else if (input$plotType == 'ggplot') {
-        paste(
-          'R Code:',
+        tags$code(
           "ggplot(aes(",
           input$treesVariable,
           "), data=trees)+
@@ -1226,15 +1250,14 @@ server <- function(input, output, session) {
       if (input$plotType == 'plot') {
         tags$code(
           'hist(',
-          input$dataset,
-          '$',
           input$carsVariable,
+          ', data =',
+          input$dataset,
           ')',
           seq = '')
       }
       else{
-        paste(
-          'R Code:',
+        tags$code(
           "ggplot(aes(",
           input$carsVariable,
           "), data=cars)+
@@ -1246,17 +1269,16 @@ server <- function(input, output, session) {
     }
     else{
       if (input$plotType == 'plot') {
-        paste('R Code:',
-              'hist(',
-              input$dataset,
-              '$',
-              input$treesVariable,
-              ')',
-              seq = '')
+        tags$code(
+          'hist(',
+          input$treesVariable,
+          ', data =',
+          input$dataset,
+          ')',
+          seq = '')
       }
       else{
-        paste(
-          'R Code:',
+        tags$code(
           "ggplot(aes(",
           input$treesVariable,
           "), data=trees)+
@@ -1273,15 +1295,14 @@ server <- function(input, output, session) {
       if (input$plotType == 'plot') {
         tags$code(
           'barplot(',
-          input$dataset,
-          '$',
           input$carsVariable,
+          ', data =',
+          input$dataset,
           ')',
           seq = '')
       }
       else{
-        paste(
-          'R Code:',
+        tags$code(
           "ggplot(aes(",
           input$carsVariable,
           "), data=cars)+
@@ -1294,17 +1315,16 @@ server <- function(input, output, session) {
     }
     else{
       if (input$plotType == 'plot') {
-        paste('R Code:',
-              'barplot(',
-              input$dataset,
-              '$',
-              input$treesVariable,
-              ')',
-              seq = '')
+        tags$code(
+          'barplot(',
+          input$treesVariable,
+          ', data =',
+          input$dataset,
+          ')',
+          seq = '')
       }
       else{
-        paste(
-          'R Code:',
+        tags$code(
           "ggplot(aes(",
           input$treesVariable,
           "), data=trees)+
@@ -1322,21 +1342,20 @@ server <- function(input, output, session) {
       if (input$plotType == 'plot') {
         tags$code(
           'qqnorm(',
-          input$dataset,
-          '$',
           input$carsVariable,
+          ', data =',
+          input$dataset,
           ')',
           '\n qqline(',
-          input$dataset,
-          '$',
           input$carsVariable,
+          ', data =',
+          input$dataset,
           ')',
           seq = ''
         )
       }
       else{
-        paste(
-          'R Code:',
+        tags$code(
           "ggplot(aes(sample=",
           input$carsVariable,
           "), data=cars)+
@@ -1348,24 +1367,22 @@ server <- function(input, output, session) {
     }
     else{
       if (input$plotType == 'plot') {
-        paste0(
-          'R Code:',
+        tags$code(
           'qqnorm(',
-          input$dataset,
-          '$',
           input$treesVariable,
+          ', data =',
+          input$dataset,
           ')',
           'qqline(',
-          input$dataset,
-          '$',
           input$treesVariable,
+          ', data =',
+          input$dataset,
           ')',
           seq = ''
         )
       }
       else{
-        paste(
-          'R Code:',
+        tags$code(
           "ggplot(aes(sample=",
           input$treesVariable,
           "), data=trees)+
