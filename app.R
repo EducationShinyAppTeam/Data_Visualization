@@ -44,9 +44,9 @@ ui <- list(
                   sidebarMenu(
                     id = 'pages',
                     menuItem('Overview', tabName = 'overview', icon = icon("tachometer-alt")),
-                    menuItem('Simple Data Visualization', tabName = 'VisualOne',
+                    menuItem('Simple Visualization', tabName = 'VisualOne',
                              icon = icon('wpexplorer')),
-                    menuItem('Adv. Data Visualization', tabName = 'exp4', icon = icon('wpexplorer')),
+                    menuItem('Adv. Visualization', tabName = 'exp4', icon = icon('wpexplorer')),
                     menuItem('References', tabName = "References", icon = icon("leanpub"))
                   ),
                   #PSU logo
@@ -85,7 +85,7 @@ ui <- list(
                Special Thanks to Grace (Yubaihe) Zhou for being incredibly helpful with programming issues.
               It was updated for formatting by Ethan Wright 2020'),
               div(
-                class = "updated", "Last Update: 6/12/2022 by YY.")
+                class = "updated", "Last Update: 6/15/2022 by YY.")
                     ),
 
               ############ Data Visualization Introduction #######
@@ -676,9 +676,6 @@ tabItem(
   tabName = "References",
   withMathJax(),
   h2("References"),
-
-  p('The Protein-Protein Interaction Dataset is from the Warwick University - Molecular Organisation and Assembly in Cells.'),
-
   p(class = "hangingindent",
     "Attali, D. (2020). 
   shinyjs: Easily Improve the User Experience of Your Shiny Apps in Seconds, R package. 
@@ -703,6 +700,13 @@ tabItem(
     "Chang, W., Cheng, J., Allaire, J., Xie, Y., and MchPherson, J. (2020),
   shiny: Web Application Framework for R, R package.
   Available from https://CRAN.R-project.org/package=shiny"),
+  p(class = "hangingindent",
+    "Lu,H.,Lu,L.,and Skolnick, J.(2003). Protein-Protein interaction dataset.[Text file].
+  Available from https://pubmed.ncbi.nlm.nih.gov/12609891/"),
+  p(class = "hangingindent",
+    "Molecular Organisation and Assembly in Cells(2007). Contour Plots of Matrix Data.
+  University of Warwick: Warwick, UK. 
+  Available from https://warwick.ac.uk/fac/sci/moac/people/students/peter_cock/r/matrix_contour/#references"),
   p(class = "hangingindent",
     "Nijs, V., Fang, F., Trestle Technology, LLC and Allen, J. (2019). 
   shinyAce: Ace Editor Bindings for Shiny, R package.
