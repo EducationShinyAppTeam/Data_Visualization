@@ -1,3 +1,4 @@
+# Load Packages ----
 library(shiny)
 library(shinydashboard)
 library(shinyBS)
@@ -20,360 +21,372 @@ library(knitr)
 library(rmarkdown)
 library(shinyAce)
 library(ggmap)
-#library(rLocker)
 
 source("helpers.R")
 
 bank <- read.csv("questionbank.csv")
-bank = data.frame(lapply(bank, as.character), stringsAsFactors = FALSE)
+bank <- data.frame(
+  lapply(bank, as.character), 
+  stringsAsFactors = FALSE)
 
+# Define UI for App ----
 ui <- list(
-  dashboardPage(skin = "green",
-                header = dashboardHeader(title = 'Data Visualization',
-                                         tags$li(class = "dropdown", actionLink("info", icon("info"), class = "myClass")),
-                                         tags$li(
-                                           class = "dropdown",
-                                           boastUtils::surveyLink(name = "Data_Visualization")
-                                         ), # add this one
-                                         tags$li(class = "dropdown",tags$a(href = "https://shinyapps.science.psu.edu/",
-                                                                           icon("home")))
-                ),
-
-                dashboardSidebar(
-                  width = 250,
-                  sidebarMenu(
-                    id = 'pages',
-                    menuItem('Overview', tabName = 'overview', icon = icon("tachometer-alt")),
-                    menuItem('Simple Visualization', tabName = 'VisualOne',
-                             icon = icon('wpexplorer')),
-                    menuItem('Adv. Visualization', tabName = 'exp4', icon = icon('wpexplorer')),
-                    menuItem('References', tabName = "References", icon = icon("leanpub"))
-                  ),
-                  #PSU logo
-                  tags$div(class = "sidebar-logo",
-                           boastUtils::psu_eberly_logo("reversed"))
-                ),
-
-                dashboardBody(
-                  tags$head(
-                    tags$link(rel = "stylesheet", type = "text/css", href = "https://educationshinyappteam.github.io/Style_Guide/theme/boast.css")
-                  ),
-                  tags$style(type = "text/css", ".content-wrapper,.right-side {background-color: white;}"),
-
-                  useShinyjs(),
-                  tabItems(
-                    tabItem(tabName = 'overview',
-                            h1('Data Visualization App'),
-                            br(),
-                            h2('About:'),
-                            p('This app illustrates R code for data visualization.'),
-                            br(),
-                            h2('Instructions'),
-                            tags$ol(
-                              tags$li("Simple data visualization section introduces
-                       how to create some commonly used plots with ggplot and Rplot with exercises at the end."),
-                              tags$li("Advanced Data Visualization section
+  dashboardPage(
+    skin = "green",
+    header = dashboardHeader(
+      title = 'Data Visualization',
+      tags$li(class = "dropdown", actionLink("info", icon("info"), class = "myClass")),
+      tags$li(
+        class = "dropdown",
+        boastUtils::surveyLink(name = "Data_Visualization")
+      ), 
+      tags$li(
+        class = "dropdown",tags$a(href = "https://shinyapps.science.psu.edu/", icon("home"))
+      )
+    ),
+    
+    dashboardSidebar(
+      width = 250,
+      sidebarMenu(
+        id = 'pages',
+        menuItem('Overview', tabName = 'overview', icon = icon("tachometer-alt")),
+        menuItem('Simple Visualization', tabName = 'VisualOne', icon = icon('wpexplorer')),
+        menuItem('Advanced Visualization', tabName = 'exp4', icon = icon('wpexplorer')),
+        menuItem('References', tabName = "References", icon = icon("leanpub"))
+      ),
+      tags$div(class = "sidebar-logo",
+               boastUtils::psu_eberly_logo("reversed"))
+    ),
+    ### Create the body ----
+    dashboardBody(
+      tags$head(
+        tags$link(
+          rel = "stylesheet", type = "text/css", 
+          href = "https://educationshinyappteam.github.io/Style_Guide/theme/boast.css")
+      ),
+      tags$style(
+        type = "text/css", ".content-wrapper,.right-side {background-color: white;}"
+        ),
+      useShinyjs(),
+      tabItems(
+        #### Set up the Overview Page ----
+        tabItem(
+          tabName = 'overview',
+          h1('Data Visualization App'),
+          br(),
+          h2('About:'),
+          p('This app illustrates R code for data visualization.'),
+          br(),
+          h2('Instructions'),
+          tags$ol(
+            tags$li("Simple data visualization section introduces
+                     how to create some commonly used plots with ggplot 
+                     and Rplot with exercises at the end."),
+            tags$li("Advanced Data Visualization section
                       introduces 3D plots, line plots, contour plots, and heat maps.")
-                            ),
-                      br(),
-                      div(style = 'text-align: center',
-                          bsButton(inputId = 'go2', label = 'Explore',
-                                   icon = icon('bolt'), size = 'large', class='circle grow')),
-                      br(),
-                      h2('Acknowledgements'),
-                      p('This application was coded and developed by Anna (Yinqi) Zhang in 2018 and Yiyun Gong in 2019.
-               Special Thanks to Grace (Yubaihe) Zhou for being incredibly helpful with programming issues.
-              It was updated for formatting by Ethan Wright 2020'),
-              div(
-                class = "updated", "Last Update: 6/15/2022 by YY.")
-                    ),
-
-              ############ Data Visualization Introduction #######
-              ######Characterizing one single Variable######
-
-              tabItem(tabName = 'VisualOne',
-                      # div(style="display: inline-block;vertical-align:top;",
-                        # tags$a(href='https://shinyapps.science.psu.edu/',tags$img(src='homebut.PNG', width = 19))
-                      # ),
-                      # div(style="display: inline-block;vertical-align:top;",
-                      #     circleButton("info0",icon = icon("info"), status = "myClass",size = "xs")
-                      # ),
-
-                      tabsetPanel(type = 'tabs',
-                                  ###### One Variable ######
-                                  tabPanel('Single Variable',
-                                           h2('One Variable Visualization'),
-                                           # br(),
-                                           p('This section illustrates R code for data
-                                    visualization includes plot() and ggplot() with one Variable'),
-
-                                    br(),
-                                    sidebarLayout(
-                                      sidebarPanel(
-                                        id="sidebar",
-                                        tags$head(tags$style(
-                                          HTML('#sidebar{
+          ),
+          br(),
+          div(
+            style = 'text-align: center',
+            bsButton(
+              inputId = 'go2',
+              label = 'Explore',
+              icon = icon('bolt'),
+              size = 'large', 
+              class='circle grow')
+          ),
+          ##### Create two lines of space
+          br(),
+          br(),
+          h2('Acknowledgements'),
+          p(
+          'This application was coded and developed by Anna (Yinqi) Zhang in 2018 
+           and Yiyun Gong in 2019.
+           Special Thanks to Grace (Yubaihe) Zhou for being incredibly helpful 
+           with programming issues.
+           It was updated for formatting by Ethan Wright 2020'
+          ),
+          div(
+            class = "updated", "Last Update: 6/15/2022 by YY.")
+        ),
+        #### Set up the simple visualization Page ----
+        tabItem(
+          tabName = 'VisualOne',
+          tabsetPanel(
+            type = 'tabs',
+            ###### Single Variable ----
+            tabPanel(
+              'Single Variable',
+              h2('One Variable Visualization'),
+              p('This section illustrates R code for data
+                 visualization includes plot() and ggplot() with one Variable'),
+              br(),
+              sidebarLayout(
+                sidebarPanel(
+                  id="sidebar",
+                  tags$head(tags$style(
+                    HTML('#sidebar{
+                                                background-color: #FFFFFF;
+                                            }'
+                    )
+                  )
+                  ),
+                  checkboxInput("previewData", "Preview of Datasets"),
+                  ##### select between plot and ggplot
+                  selectInput(
+                    inputId="plotType", label="Select Plot Method",
+                    choices = c('plot', 'ggplot'),
+                    selected = 'plot'
+                  ),
+                  ##### select datasets
+                  selectInput(
+                    inputId="dataset", label="Select Dataset:",
+                    choices= c('cars', 'trees'),
+                    selected = 'cars'
+                  ),
+                  ##### variable options for 'car' dataset
+                  conditionalPanel(
+                    condition = "input.dataset == 'cars'",
+                    selectInput(
+                      inputId="carsVariable", 
+                      label="Select Variables",
+                      choices = c("speed", "dist"),
+                      selected = 'speed')
+                  ),
+                  ##### variable option for 'trees' dataset
+                  conditionalPanel(
+                    condition = "input.dataset == 'trees'",
+                    selectInput(
+                      inputId="treesVariable", label="Select Variables",
+                      choices = c("Girth", "Height", "Volume"),
+                      selected = 'Girth')
+                  )
+                ),
+                mainPanel(
+                  conditionalPanel(
+                    condition="input.previewData==1",
+                    fluidRow(
+                      column(2, p(strong("Dataset"))),
+                      column(4, DT::dataTableOutput("dataTable")),
+                    )
+                  ),
+                  fluidRow(
+                    column(6,
+                           plotOutput(
+                             outputId="oneDensity", 
+                             width="180%",
+                             height="350px")%>% withSpinner(color="#FFFFFF")),
+                  ),
+                  tags$strong('R Code: '),
+                  fluidRow( 
+                    column(width = 10, uiOutput(outputId="DensityoneCode")),
+                  ),
+                  br(),
+                  br(),
+                  fluidRow(
+                    column(6,
+                           plotOutput(
+                             outputId="onehist", width="180%",
+                             height="350px")%>% withSpinner(color="#FFFFFF"))
+                  ),
+                  tags$strong('R Code: '),
+                  fluidRow(
+                    column(width = 10, uiOutput(outputId="HistogramoneCode"))
+                  ),
+                  br(),
+                  br(),
+                  fluidRow(
+                    column(6,
+                           plotOutput(
+                             outputId="onebar", 
+                             width="180%",
+                             height="350px")%>% withSpinner(color="#1E7B14")),
+                  ),
+                  tags$strong('R Code: '),
+                  fluidRow(
+                    column(width = 10, uiOutput(outputId="BarCode")),
+                  ),
+                  br(),
+                  br(),
+                  fluidRow(
+                    column(6,
+                           plotOutput(
+                             outputId="oneqq", 
+                             width="180%",
+                             height="350px")%>% withSpinner(color="#1E7B14"))
+                  ),
+                  tags$strong('R Code: '),
+                  fluidRow(
+                    column(width = 10, uiOutput(outputId="qqCode"))
+                  ),
+                  br(),
+                  br()
+                )
+              )
+            ),
+            ##### Two Variables ----
+            tabPanel(title='Two Variables', value='panel2',
+                     h2('Two Variables Visualization'),
+                     p('This section illustrates R code for data
+                        visualization uses ggplot() with Two Variables'),
+                     br(),
+                     sidebarLayout(
+                       sidebarPanel(
+                         id="sidebar",
+                         tags$head(tags$style(
+                           HTML('#sidebar{
                                                 background-color: #FFFFFF;
                                             }')
-                                        )),
-
-                                        checkboxInput("previewData", "Preview of Datasets"),
-
-                                        ####select between plot and ggplot
-                                        selectInput(inputId="plotType", label="Select Plot Method",
-                                                    choices = c('plot', 'ggplot'),
-                                                    selected = 'plot'),
-
-                                        ####select datasets
-                                        selectInput(inputId="dataset", label="Select Dataset:",
-                                                    choices= c('cars', 'trees'),
-                                                    selected = 'cars'),
-
-                                        ####variable options for 'car' dataset
-                                        conditionalPanel(
-                                          condition = "input.dataset == 'cars'",
-                                          selectInput(inputId="carsVariable", label="Select Variables",
-                                                      choices = c("speed", "dist"),
-                                                      selected = 'speed')
-                                        ),
-
-                                        ####variable option for 'trees' dataset
-                                        conditionalPanel(
-                                          condition = "input.dataset == 'trees'",
-                                          selectInput(inputId="treesVariable", label="Select Variables",
-                                                      choices = c("Girth", "Height", "Volume"),
-                                                      selected = 'Girth')
-                                        )
-                                        #tags$img(src="DataView.pdf"),
-                                        #includeHTML("ViewData.nb.html"),
-                                        #tags$a(tags$img(src="pdficon.png"), href="DataView.pdf", download="Viewdata.pdf"),
-                                        #br(),
-                                        #downloadLink("downloadData", "Preview of Data")
-
-                                      ),
-
-                                      mainPanel(
-                                        conditionalPanel(
-                                          condition="input.previewData==1",
-
-                                          fluidRow(
-                                            column(2, p(strong("Dataset"))),
-                                            column(4, DT::dataTableOutput("dataTable")),
-
-                                          )
-                                        ),
-                                        fluidRow(
-                                          column(6,plotOutput(outputId="oneDensity", width="180%",height="350px")%>% withSpinner(color="#FFFFFF")),
-                                        ),
-                                        tags$strong('R Code: '),
-                                        fluidRow( # code
-                                          column(width = 10, uiOutput(outputId="DensityoneCode")),
-                                          #column(width = 6, uiOutput(outputId="HistogramoneCode"))
-                                        ),
-                                        br(),
-                                        br(),
-                                        fluidRow(
-                                          #column(6,plotOutput(outputId="oneDensity", width="100%",height="300px")%>% withSpinner(color="#FFFFFF")),
-                                          column(6,plotOutput(outputId="onehist", width="180%",height="350px")%>% withSpinner(color="#FFFFFF"))
-                                        ),
-                                        tags$strong('R Code: '),
-                                        fluidRow( # code
-                                          #column(width = 6, uiOutput(outputId="DensityoneCode")),
-                                          column(width = 10, uiOutput(outputId="HistogramoneCode"))
-                                        ),
-                                        br(),
-                                        br(),
-                                        fluidRow(
-                                          column(6,plotOutput(outputId="onebar", width="180%",height="350px")%>% withSpinner(color="#1E7B14")),
-                                          #column(6,plotOutput(outputId="oneqq", width="100%",height="300px")%>% withSpinner(color="#1E7B14"))
-                                        ),
-                                        tags$strong('R Code: '),
-                                        fluidRow(
-                                          column(width = 10, uiOutput(outputId="BarCode")),
-                                          #column(width = 6, uiOutput(outputId="qqCode"))
-                                        ),
-                                        br(),
-                                        br(),
-                                        fluidRow(
-                                          #column(6,plotOutput(outputId="onebar", width="100%",height="300px")%>% withSpinner(color="#1E7B14")),
-                                          column(6,plotOutput(outputId="oneqq", width="180%",height="350px")%>% withSpinner(color="#1E7B14"))
-                                        ),
-                                        tags$strong('R Code: '),
-                                        fluidRow(
-                                          #column(width = 6, uiOutput(outputId="BarCode")),
-                                          column(width = 10, uiOutput(outputId="qqCode"))
-                                        ),
-                                        br(),
-                                        br()
-                                        # div(style = 'text-align: center',
-                                        #     bsButton(inputId = 'next2', label = 'Next Section',
-                                        #              icon = icon('angle-double-right'), size = 'small',
-                                        #              class='circle grow'))
-                                      )
-                                    )
-                                  ),
-
-                                  ###### Two Variable ######
-                                  tabPanel(title='Two Variables', value='panel2',
-                                           h2('Two Variables Visualization'),#change h3 to h1
-                                           # br(),
-                                           p('This section illustrates R code for data
-                                    visualization uses ggplot() with Two Variables'), #change h4 to p
-
-                                    br(),
-                                    sidebarLayout(
-                                      sidebarPanel(
-                                        id="sidebar",
-                                        tags$head(tags$style(
-                                          HTML('#sidebar{
-                                                background-color: #FFFFFF;
-                                            }')
-                                        )),
-                                        ####select continuous variable 1
-                                        checkboxInput("previewDataTwo", "Preview of Datasets"),
-                                        selectInput(inputId="continuous1",
-                                                    label="Select First Continuous Variable as X:",
-                                                    choices= c('Sepal.Length',
-                                                               'Sepal.Width'),
-                                                    selected = 'Sepal.Length'),
-
-                                        selectInput(inputId="continuous2",
-                                                    label="Select Second Continuous Variable as Y:",
-                                                    choices= c('Petal.Length',
-                                                               'Petal.Width'),
-                                                    selected = 'Petal.Length'),
-
-                                        selectInput(inputId="CategoryVar",
-                                                    label="Select Categorical Variable:",
-                                                    choices= 'Species',
-                                                    selected = 'Species'),
-
-                                      ),
-
-                                      mainPanel(
-                                        conditionalPanel(
-                                          condition="input.previewDataTwo==1",
-                                          fluidRow(
-                                            column(2, p(strong("Dataset iris"))),
-                                            column(5, dataTableOutput("Previewiris"))
-                                          )
-                                          #tableOutput("Previewiris")
-                                          #p("First four rows of dataset iris")
-                                        ),
-                                        fluidRow(
-                                          column(6,plotOutput(outputId="twoscatter", width="200%", height="350px")%>% withSpinner(color="#FFFFFF")),
-                                          #column(6,plotOutput(outputId="logTransformation")%>% withSpinner(color="#FFFFFF"))
-                                        ),
-                                        #br(),
-                                        tags$strong('R Code: '),
-                                        fluidRow(
-                                          column(width = 10, uiOutput(outputId="twoscattercode")),
-                                          #column(6,uiOutput(outputId="logTransformationCode"))
-                                        ),
-                                        br(),
-                                        br(),
-                                        fluidRow(
-                                          #column(6,plotOutput(outputId="twoscatter")%>% withSpinner(color="#FFFFFF")),
-                                          column(6,plotOutput(outputId="logTransformation", width="200%",height="350px")%>% withSpinner(color="#FFFFFF"))
-                                        ),
-                                        tags$strong('R Code: '),
-                                        fluidRow(
-                                          #column(6,uiOutput(outputId="twoscattercode")),
-                                          column(width = 10, uiOutput(outputId="logTransformationCode"))
-                                        ),
-                                        br(),
-                                        br(),
-                                        fluidRow(
-                                          column(6,plotOutput(outputId="twobar", width="200%",height="350px")%>% withSpinner(color="#FFFFFF")),
-                                          #column(6,plotOutput(outputId="twobox")%>% withSpinner(color="#FFFFFF"))
-                                        ),
-                                        tags$strong('R Code: '),
-                                        fluidRow(
-                                          column(width = 10, uiOutput(outputId="twobarcode")),
-                                          #column(6,uiOutput(outputId="twoboxcode"))
-                                        ),
-                                        br(),
-                                        br(),
-                                        fluidRow(
-                                          #column(6,plotOutput(outputId="twobar")%>% withSpinner(color="#FFFFFF")),
-                                          column(6,plotOutput(outputId="twobox", width="200%",height="350px")%>% withSpinner(color="#FFFFFF"))
-                                        ),
-                                        tags$strong('R Code: '),
-                                        fluidRow(
-                                          #column(6,uiOutput(outputId="twobarcode")),
-                                          column(width = 10, uiOutput(outputId="twoboxcode"))
-                                        )
-                                      )
-                                    )
-                                  ),
-
-                                  tabPanel(title='Exercises', value='panel2',
-                                           #uiOutput("urltest"))
-                                           #includeMarkdown("test.Rmd")
-                                           #system.file("knitr", package="shinyAce")
-
-                                           fluidRow(
-                                             column(6,
-                                                    verticalLayout(
-                                                      h2("Instructions"),
-                                                      wellPanel(
-                                                        style = "background-color: #FFFFFF",
-                                                        tags$div(tags$ul(
-                                                          tags$li("You can try the following questions"),
-                                                          tags$li("Test your code with the following R script
-                                             box with the RMarkDown output under the 'Knitted Output' header"),
-                                             tags$li("In each turn, 10 questions will be randomly draw from the question bank."),
-                                             tags$li("Uncomment the sample code to start to explore.")
-                                                        ),
-                                             style = "background-color: #FFFFFF")),
-                                             h2("Exercises"),
-                                             uiOutput('progress'),
-                                             wellPanel(style = "background-color: #FFFFFF",
-                                                       uiOutput("question")%>% withSpinner(color="#FFFFFF"),
-                                                       uiOutput("options"),
-                                                       br(),
-                                                       selectInput("answer", "Select your answer from below", c("","A", "B", "C")),
-                                                       uiOutput("mark"),
-                                                       tags$style(type='text/css', '#question{font-size: 15px;
-                                                                 background-color: #FFFFFF;color: black;}',
-                                                                 '.well { padding: 10px; margin-bottom: 15px; max-width: 1000px; }')
-
-                                             ),
-                                             fluidPage(
-                                               tags$head(
-                                                 #tags$style(HTML('#submit{background-color:#FFFFFF; color:white}')),
-                                                 #tags$style(HTML('#eval{background-color:#FFFFFF; color:white}')),
-                                                 #tags$style(HTML('#nextq{background-color:#FFFFFF; color:white}'))
-                                               ),
-                                               fluidRow(
-                                                 column(12, align="center",
-                                                        div(style="display: inline-block", actionButton(inputId = 'submit', label = 'Submit', disabled = TRUE, style="success")),
-                                                        div(style="display: inline-block;vertical-align:top; width: 30px;",HTML("<br>")),
-                                                        div(style="display: inline-block", bsButton(inputId = "nextq",label = "Next", disabled = TRUE)),
-                                                        div(style="display: inline-block;vertical-align:top; width: 30px;",HTML("<br>")),
-                                                        div(style="display: inline-block", bsButton(inputId = "reset",label = "Restart", style="danger", disabled = TRUE)))
-                                               )),
-
-
-                                             # column(3,
-                                             #        actionButton(inputId = 'submit', label = 'Submit', style="success")
-                                             # ),
-                                             # column(3,
-                                             #        bsButton(inputId = "nextq",label = "Next", style='warning', disabled = TRUE)
-                                             # ),
-                                             # column(3,
-                                             #        bsButton(inputId = "reset",label = "Restart", style="danger", )
-                                             # )),
-                                             br(),
-
-                                             ##########try rlocker statement#########
-                                             # tags$samp(
-                                             #   htmlOutput("statements")
-                                             # ),
-                                             ##########end#############
-
-                                             h2("Try Your Code"),
-                                             aceEditor("rmd", mode="markdown", value='This is some markdown text. It may also have embedded R code
+                         )),
+                         ###### select continuous variable 1
+                         checkboxInput("previewDataTwo", "Preview of Datasets"),
+                         selectInput(
+                           inputId="continuous1",
+                           label="Select First Continuous Variable as X:",
+                           choices= c('Sepal.Length',
+                                      'Sepal.Width'),
+                           selected = 'Sepal.Length'),
+                         selectInput(
+                           inputId="continuous2",
+                           label="Select Second Continuous Variable as Y:",
+                           choices= c('Petal.Length',
+                                      'Petal.Width'),
+                           selected = 'Petal.Length'),
+                         selectInput(inputId="CategoryVar",
+                                     label="Select Categorical Variable:",
+                                     choices= 'Species',
+                                     selected = 'Species')
+                       ),
+                       mainPanel(
+                         conditionalPanel(
+                           condition="input.previewDataTwo==1",
+                           fluidRow(
+                             column(2, p(strong("Dataset iris"))),
+                             column(5, dataTableOutput("Previewiris"))
+                           )
+                         ),
+                         fluidRow(
+                           column(6,
+                                  plotOutput(
+                                    outputId="twoscatter", 
+                                    width="200%",
+                                    height="350px")%>% withSpinner(color="#FFFFFF")),
+                         ),
+                         tags$strong('R Code: '),
+                         fluidRow(
+                           column(width = 10, uiOutput(outputId="twoscattercode")),
+                         ),
+                         br(),
+                         br(),
+                         fluidRow(
+                           column(6,plotOutput(outputId="logTransformation", width="200%",height="350px")%>% withSpinner(color="#FFFFFF"))
+                         ),
+                         tags$strong('R Code: '),
+                         fluidRow(
+                           column(width = 10, 
+                                  uiOutput(outputId="logTransformationCode"))
+                         ),
+                         br(),
+                         br(),
+                         fluidRow(
+                           column(6,
+                                  plotOutput(
+                                    outputId="twobar", 
+                                    width="200%",
+                                    height="350px")%>% withSpinner(color="#FFFFFF")),
+                         ),
+                         tags$strong('R Code: '),
+                         fluidRow(
+                           column(width = 10, uiOutput(outputId="twobarcode")),
+                         ),
+                         br(),
+                         br(),
+                         fluidRow(
+                           column(6,
+                                  plotOutput(
+                                    outputId="twobox",
+                                    width="200%",
+                                    height="350px")%>% withSpinner(color="#FFFFFF"))
+                         ),
+                         tags$strong('R Code: '),
+                         fluidRow(
+                           column(width = 10, uiOutput(outputId="twoboxcode"))
+                         )
+                       )
+                     )
+            ),
+            tabPanel(
+              title='Exercises', 
+              value='panel2',
+              fluidRow(
+                column(6,
+                       verticalLayout(
+                         h2("Instructions"),
+                         wellPanel(
+                           style = "background-color: #FFFFFF",
+                           tags$div(
+                             tags$ul(
+                               tags$li("You can try the following questions"),
+                               tags$li(
+                                 "Test your code with the following R script
+                                       box with the RMarkDown output under the 'Knitted Output' header"
+                               ),
+                               tags$li(
+                                 "In each turn, 10 questions will be 
+                                         randomly draw from the question bank."
+                               ),
+                               tags$li(
+                                 "Uncomment the sample code to start to explore."
+                               )
+                             ),
+                             style = "background-color: #FFFFFF")),
+                         h2("Exercises"),
+                         uiOutput('progress'),
+                         wellPanel(
+                           style = "background-color: #FFFFFF",
+                           uiOutput("question")%>% withSpinner(color="#FFFFFF"),
+                           uiOutput("options"),
+                           br(),
+                           selectInput("answer", "Select your answer from below", c("","A", "B", "C")),
+                           uiOutput("mark"),
+                           tags$style(type='text/css', 
+                                      '#question{font-size: 15px;
+                                              background-color: #FFFFFF;color: black;}',
+                                      '.well { padding: 10px; margin-bottom: 15px; max-width: 1000px; }')
+                         ),
+                         fluidPage(
+                           fluidRow(
+                             column(12, align="center",
+                                    div(
+                                      style="display: inline-block",
+                                      actionButton(
+                                        inputId = 'submit', 
+                                        label = 'Submit', disabled = TRUE, style="success")
+                                    ),
+                                    div(
+                                      style="display: inline-block;vertical-align:top; width: 30px;",
+                                      HTML("<br>")
+                                    ),
+                                    div(
+                                      style="display: inline-block", 
+                                      bsButton(inputId = "nextq",label = "Next", disabled = TRUE)
+                                    ),
+                                    div(
+                                      style="display: inline-block;vertical-align:top; width: 30px;",
+                                      HTML("<br>")
+                                    ),
+                                    div(
+                                      style="display: inline-block", 
+                                      bsButton(inputId = "reset",label = "Restart", style="danger", disabled = TRUE))
+                             )
+                           )
+                         ),
+                         
+                         h2("Try Your Code"),
+                         aceEditor("rmd",
+                                   mode="markdown", 
+                                   value='This is some markdown text. 
+                                  It may also have embedded R code
 which will be executed. Please also read the output
 message for more hints.
 
@@ -401,277 +414,368 @@ It can even include graphical elements.
 plot(cars$speed)
 ```
 '),
-column(6,
-       withBusyIndicatorUI(
-         actionButton("eval", "Run")))
-                                                    )),
-br(),
-column(6,
-       h2("Knitted Output"),
-       htmlOutput("knitDoc")
-)
-                                           )
-                                  )
-                      )
-              ),
+                                column(6,
+                                       withBusyIndicatorUI(
+                                         actionButton("eval", "Run")))
+                              )),
+                       br(),
+                       column(6,
+                              h2("Knitted Output"),
+                              htmlOutput("knitDoc")
+                       )
+                     )
+            )
+          )
+        ),
 ######Advanced
-tabItem(tabName = 'exp4',
-        tabsetPanel(type = 'tabs',
-
-                    ###### Maps ######
-                    tabPanel('Maps',
-                             br(),
-                             box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
-
-                                 selectInput(inputId = 'mapsOp', label = 'Make a US/World Map with ggplot2',
-                                             choices = c('US Map - ggplot2', 'US Map - plotly'), selected = 'US Map'),
-                                 bsPopover(id = 'mapsOp', title = " ", content = 'mUSMap takes in one dataframe that includes information about different
-                                               US states and returns this data or a ggplot object constructed with the data. mWorldMap does the same but it
-                                               takes in one dataframe that includes information about different countries.', trigger = 'click'),
-
-                                 # conditionalPanel('input.mapsOp == "World Map"',
-                                 #                  sliderInput(inputId = 'worldMap1', label = 'The Number of Color Scales', min = 1, max = 10,
-                                 #                              value = 5, step = 1, ticks = TRUE)
-                                 #                  ),
-
-                                 conditionalPanel('input.mapsOp == "US Map - ggplot2"',
-                                                  selectInput(inputId = 'usMap1', label = 'Plot Option', choices = c('borders', 'frame')),
-                                                  selectInput(inputId = 'usMap2', label = 'Style Option', choices = c('compact', 'real'))
-                                 )
-
-                             ),
-
-                             # box(title = NULL, style = 'background-color: #f0f4c3', width=NULL, height = NULL,
-
-                             conditionalPanel('input.mapsOp == "US Map - ggplot2"',
-                                              div(style = "background-color: #FFFFFF",
-                                                  tags$strong('R code: '),
-                                                  uiOutput('usMapOut2'),
-                                                  br(),
-                                                  fluidRow(
-                                                    column(12, align="center",
-                                                           plotOutput('usMapOut1', width="80%")
-                                                    )
-                                                  ),
-                                                  br()
-
-                                              )),
-
-                             conditionalPanel('input.mapsOp == "US Map - plotly"',
-                                              div(style = "background-color: #FFFFFF",
-                                                  tags$strong('R code: '),
-                                                  uiOutput('plotlyUScode'),
-                                                  br(),
-                                                  fluidRow(
-                                                    column(12, align="center",
-                                                           plotlyOutput('plotlyUSMap', width='80%'))
-                                                  ),
-                                                  br()
-
-                                              ))
-                             # )
-                    ),
-
-                    ###### 3D Plots ######
-                    tabPanel('3D Plots',
-                             br(),
-                             fluidRow(
-                               column(width = 12,
-                                      box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
-                                          selectInput(inputId = 'Exsel', label = '3D Plot Type',
-                                                      choices = c('Normal Simulation via Plotly', '3D Basic Scatter Plot', '3D Texts Plot'),
-                                                      # choices = c('Normal Simulation via Plotly', 'Basic Scatter Plot', 'Basic Scatter Plot Colored by Groups',
-                                                      #             '3D Plots with Confidence Intervals', '3D Texts Plot'),
-                                                      selected = 'Normal Simulation via Plotly', multiple = FALSE),
-
-                                          # bsPopover(id = 'Exsel', title = 'Understand the Graph Type',
-                                          #           content = 'Mesh plot generates a wireframe plot while the scatter plot generates a dotted plot.',
-                                          #           placement = 'bottom', trigger = 'hover'),
-
-                                          #a. Normal Simulation via Plotly
-                                          conditionalPanel('input.Exsel == "Normal Simulation via Plotly"',
-                                                           sliderInput(inputId = 'Exsel1', label = 'Please Select Your Sample Size', min = 0, max = 100,
-                                                                       value = 30, step = 1, ticks = TRUE)
-                                          ),
-
-                                          #b. Basic Scatter Plot
-                                          conditionalPanel('input.Exsel == "3D Basic Scatter Plot"',
-                                                           selectInput(inputId = 'basicX', label = 'Variable for X-Axis', choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
-                                                                       selected = 'Sepal.Length', multiple = FALSE),
-                                                           selectInput(inputId = 'basicY', label = 'Variable for Y-Axis', choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
-                                                                       selected = 'Sepal.Width', multiple = FALSE),
-                                                           selectInput(inputId = 'basicZ', label = 'Variable for Z-Axis', choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
-                                                                       selected = 'Petal.Length', multiple = FALSE)
-                                          ),
-                                          #c.
-                                          #d. 3D Plots with Confidence Intervals
-                                          conditionalPanel('input.Exsel == "3D Plots with Confidence Intervals"',
-                                                           selectInput(inputId = 'CIX', label = 'Variable for X-Axis', choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
-                                                                       selected = 'Sepal.Length', multiple = FALSE),
-                                                           selectInput(inputId = 'CIY', label = 'Variable for Y-Axis', choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
-                                                                       selected = 'Sepal.Width', multiple = FALSE),
-                                                           selectInput(inputId = 'CIZ', label = 'Variable for Z-Axis', choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
-                                                                       selected = 'Petal.Length', multiple = FALSE)
-                                          )
-                                      )
-                               )
-                             ),
-                             fluidRow(
-                               column(width = 12,
-                                      box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
-
-                                          #a. Normal Simulation via Plotly
-                                          conditionalPanel('input.Exsel == "Normal Simulation via Plotly"',
-                                                           tags$strong('R code: '),
-                                                           uiOutput('ExCode'),
-                                                           br(),
-                                                           plotlyOutput('plotly1'),
-                                                           br(),
-                                                           verbatimTextOutput("hover"),
-                                                           verbatimTextOutput("click")
-                                          ),
-
-                                          #b. Basic Scatter Plot
-                                          conditionalPanel('input.Exsel == "3D Basic Scatter Plot"',
-                                                           tags$strong('R code: '),
-                                                           uiOutput('basicRcode'),
-                                                           br(),
-                                                           tableOutput('bspTable'),
-                                                           plotOutput('bspOut1')
-                                          ),
-
-                                          # #c. Basic Scatter Plot Colored by Groups
-                                          # conditionalPanel('input.Exsel == "Basic Scatter Plot Colored by Groups"',
-                                          #                  tableOutput('bspTableCopy'),
-                                          #                  plotOutput('bspOut2')
-                                          # ),
-
-                                          # #d. 3D Plots with Confidence Intervals
-                                          # conditionalPanel('input.Exsel == "3D Plots with Confidence Intervals"',
-                                          #                  plotOutput('CIOut')
-                                          #                  ),
-
-                                          #e. 3D Texts Plot
-                                          conditionalPanel('input.Exsel == "3D Texts Plot"',
-                                                           tags$strong('R code: '),
-                                                           uiOutput('textRcode'),
-                                                           br(),
-                                                           tableOutput('textTable'),
-                                                           plotOutput('textOut')
-                                          )
-
-                                      )
-                               )
-                             )
-                    ),
-
-                    ###### 2D Line Plots ######
-                    tabPanel('2D Line Plots',
-                             br(),
-                             fluidRow(
-                               column(width = 12,
-                                      box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
-
-                                          sliderInput(inputId = 'LPsel1', label = 'Please Set the Maximum of X-Axis', min = 0, max = 200,
-                                                      value = 80, step = 1, ticks = TRUE),
-
-                                          numericInput(inputId = 'LPnum1', label = 'Theoretical Mean of trace 0',
-                                                       value = 10, step = 1),
-                                          selectInput(inputId = 'LPSEL1', label = 'Please Select Your First Graph Mode',
-                                                      choices = c('Lines', 'Markers')),
-                                          numericInput(inputId = 'LPnum2', label = 'Theoretical Mean of trace 1',
-                                                       value = -10, step = 1),
-                                          selectInput(inputId = 'LPSEL2', label = 'Please Select Your Second Graph Mode',
-                                                      choices = c('Lines', 'Markers'))
-                                      )
-                               )
-                             ),
-                             fluidRow(
-                               column(width = 12,
-                                      box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
-                                          tags$strong('R code: '),
-                                          uiOutput('LPCode'),
-                                          br(),
-                                          plotlyOutput('plotly2')
-                                      )
-                               )
-                             )
-                    ),
-
-                    ###### Contour Plots & Heat Maps ######
-                    tabPanel('Contour Plots & Heatmaps',
-                             br(),
-                             sidebarLayout(
-                               sidebarPanel(
-                                 tags$head(tags$style(
-                                   HTML('#sidebarmap{
+tabItem(
+  tabName = 'exp4',
+  tabsetPanel(
+    type = 'tabs',
+    ##### Maps ----
+    tabPanel(
+      'Maps',
+      br(),
+      box(
+        title = NULL, 
+        style = 'background-color: #FFFFFF', 
+        width = NULL, 
+        height = NULL,
+        ###### plotly option
+        selectInput(
+          inputId = 'mapsOp', 
+          label = 'Make a US/World Map with ggplot2',
+          choices = c('US Map - ggplot2', 'US Map - plotly'), 
+          selected = 'US Map'
+        ),
+        bsPopover(
+          id = 'mapsOp', 
+          title = " ", 
+          content = 'mUSMap takes in one dataframe that includes 
+                    information about different US states and 
+                    returns this data or a ggplot object constructed with the data. 
+                    mWorldMap does the same but it takes in one dataframe that 
+                    includes information about different countries.', 
+                    trigger = 'click'
+        ),
+        ###### plot option
+        conditionalPanel(
+          'input.mapsOp == "US Map - ggplot2"',
+          selectInput(
+            inputId = 'usMap1', 
+            label = 'Plot Option', 
+            choices = c('borders', 'frame')
+          ),
+          selectInput(
+            inputId = 'usMap2', 
+            label = 'Style Option', 
+            choices = c('compact', 'real'))
+        )
+      ),
+      conditionalPanel(
+        'input.mapsOp == "US Map - ggplot2"',
+        div(style = "background-color: #FFFFFF",
+            tags$strong('R code: '),
+            uiOutput('usMapOut2'),
+            br(),
+            fluidRow(
+              column(12, align="center",
+                     plotOutput('usMapOut1', width="80%")
+              )
+            ),
+            br()
+        )
+      ),
+      conditionalPanel(
+        'input.mapsOp == "US Map - plotly"',
+        div(style = "background-color: #FFFFFF",
+            tags$strong('R code: '),
+            uiOutput('plotlyUScode'),
+            br(),
+            fluidRow(
+              column(12, align="center",
+                     plotlyOutput('plotlyUSMap', width='80%'))
+            ),
+            br()
+        )
+      )
+    ),
+    ##### 3D Plots ----
+    tabPanel(
+      '3D Plots',
+      br(),
+      fluidRow(
+        column(
+          width = 12,
+          box(
+            title = NULL, 
+            style = 'background-color: #FFFFFF', 
+            width = NULL, 
+            height = NULL,
+            selectInput(
+              inputId = 'Exsel', 
+              label = '3D Plot Type',
+              choices = c('Normal Simulation via Plotly', 
+                          '3D Basic Scatter Plot', 
+                          '3D Texts Plot'),
+              selected = 'Normal Simulation via Plotly',
+              multiple = FALSE),
+            #b. normal simulation via plotly
+            conditionalPanel(
+              'input.Exsel == "Normal Simulation via Plotly"',
+              sliderInput(
+                inputId = 'Exsel1', 
+                label = 'Please Select Your Sample Size', 
+                min = 0, 
+                max = 100,
+                value = 30, 
+                step = 1, 
+                ticks = TRUE
+              )
+            ),
+            #b. Basic Scatter Plot
+            conditionalPanel(
+              'input.Exsel == "3D Basic Scatter Plot"',
+              selectInput(
+                inputId = 'basicX', 
+                label = 'Variable for X-Axis',
+                choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
+                selected = 'Sepal.Length', multiple = FALSE
+              ),
+              selectInput(
+                inputId = 'basicY', 
+                label = 'Variable for Y-Axis', 
+                choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
+                selected = 'Sepal.Width', multiple = FALSE
+              ),
+              selectInput(
+                inputId = 'basicZ', 
+                label = 'Variable for Z-Axis', 
+                choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
+                selected = 'Petal.Length', multiple = FALSE
+              )
+            ),
+            #c. 3D Plots with Confidence Intervals
+            conditionalPanel(
+              'input.Exsel == "3D Plots with Confidence Intervals"',
+              selectInput(
+                inputId = 'CIX',
+                label = 'Variable for X-Axis', 
+                choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
+                selected = 'Sepal.Length', multiple = FALSE
+              ),
+              selectInput(
+                inputId = 'CIY', 
+                label = 'Variable for Y-Axis', 
+                choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
+                selected = 'Sepal.Width', multiple = FALSE
+              ),
+              selectInput(
+                inputId = 'CIZ', 
+                label = 'Variable for Z-Axis', 
+                choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
+                selected = 'Petal.Length', multiple = FALSE
+              )
+            )
+          )
+        )
+      ),
+      fluidRow(
+        column(width = 12,
+               box(title = NULL, 
+                   style = 'background-color: #FFFFFF', 
+                   width = NULL, 
+                   height = NULL,
+                   #a. Normal Simulation via Plotly
+                   conditionalPanel(
+                     'input.Exsel == "Normal Simulation via Plotly"',
+                     tags$strong('R code: '),
+                     uiOutput('ExCode'),
+                     br(),
+                     plotlyOutput('plotly1'),
+                     br(),
+                     verbatimTextOutput("hover"),
+                     verbatimTextOutput("click")
+                   ),
+                   #b. Basic Scatter Plot
+                   conditionalPanel(
+                     'input.Exsel == "3D Basic Scatter Plot"',
+                     tags$strong('R code: '),
+                     uiOutput('basicRcode'),
+                     br(),
+                     tableOutput('bspTable'),
+                     plotOutput('bspOut1')
+                   ),                
+                   #e. 3D Texts Plot
+                   conditionalPanel(
+                     'input.Exsel == "3D Texts Plot"',
+                     tags$strong('R code: '),
+                     uiOutput('textRcode'),
+                     br(),
+                     tableOutput('textTable'),
+                     plotOutput('textOut')
+                   ) # conditional panel
+               )#box
+        )# column
+      )#fluidrow
+    ),#tabpanel
+    ##### 2D Line Plots ----
+    tabPanel(
+      '2D Line Plots',
+      br(),
+      fluidRow(
+        column(width = 12,
+               box(title = NULL, 
+                   style = 'background-color: #FFFFFF', 
+                   width = NULL, 
+                   height = NULL,
+                   sliderInput(
+                     inputId = 'LPsel1', 
+                     label = 'Please Set the Maximum of X-Axis', 
+                     min = 0, 
+                     max = 200,
+                     value = 80, 
+                     step = 1, 
+                     ticks = TRUE
+                   ),
+                   numericInput(
+                     inputId = 'LPnum1',
+                     label = 'Theoretical Mean of trace 0',
+                     value = 10, 
+                     step = 1
+                   ),
+                   selectInput(
+                     inputId = 'LPSEL1', 
+                     label = 'Please Select Your First Graph Mode',
+                     choices = c('Lines', 'Markers')),
+                   numericInput(
+                     inputId = 'LPnum2', 
+                     label = 'Theoretical Mean of trace 1',
+                     value = -10, 
+                     step = 1
+                   ),
+                   selectInput(
+                     inputId = 'LPSEL2', 
+                     label = 'Please Select Your Second Graph Mode',
+                     choices = c('Lines', 'Markers'))
+               )
+        )
+      ),
+      fluidRow(
+        column(width = 12,
+               box(title = NULL, 
+                   style = 'background-color: #FFFFFF',
+                   width = NULL, height = NULL,
+                   tags$strong('R code: '),
+                   uiOutput('LPCode'),
+                   br(),
+                   plotlyOutput('plotly2')
+               )
+        )
+      )
+    ),
+    ##### Contour Plots & Heat Maps ----
+    tabPanel(
+      'Contour Plots & Heatmaps',
+      br(),
+      sidebarLayout(
+        sidebarPanel(
+          tags$head(tags$style(
+            HTML('#sidebarmap{
                                                 background-color: #FFFFFF;
                                             }')
-                                 )),
-                                 #box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
-                                 id="sidebarmap",
-                                 div('Heat maps and contour plots are visualization techniques to show
-                                            data density on a map. They are particularly helpful when you have
-                                            a lot of data points on the map and are mainly interested in their
-                                            overall distribution.'),
-                                 br(),
-                                 selectInput(inputId = 'chSel', label = 'Please Select Your Display Option', choices = c('', 'Contour Plots', 'Heatmaps'), selected = 'Contour Plots'),
-
-                                 #contour plots
-                                 conditionalPanel('input.chSel == "Contour Plots"',
-                                                  selectInput(inputId = 'chSel2', label = 'View An Example', choices = c('Volcano', 'Protein-Protein Interaction')),
-                                                  conditionalPanel('input.chSel2 == "Volcano"',
-                                                                   checkboxInput(inputId = 'contourLabel', label = 'Add Contour Labels', value = FALSE)
-                                                  )
-                                 ),
-
-                                 #heat maps
-                                 conditionalPanel('input.chSel == "Heatmaps"',
-                                                  selectInput(inputId = 'heat1', label = 'View An Example', choices = c('Volcano', 'Cars')),
-                                                  conditionalPanel('input.heat1 == "Volcano"',
-                                                                   sliderTextInput(inputId = 'heatmapCol', label = 'Please Select Your Colorscale',
-                                                                                   choices = c('purple+green', 'yellow+red', 'pink+purple', 'white+black'), grid = TRUE)
-                                                  )
-                                 )
-                                 #)
-                               ),
-
-                               mainPanel(
-                                 box(title = NULL, style = 'background-color: #FFFFFF', width = NULL, height = NULL,
-                                     conditionalPanel('input.chSel == "Contour Plots"',
-                                                      conditionalPanel('input.chSel2 == "Volcano"',
-                                                                       tags$b('In this section, we will use an embedded dataset named Volcano. It is a matrix containing 87 rows and 61 columns.'),
-                                                                       br(),
-                                                                       br(),
-                                                                       tags$strong('R Code: '),
-                                                                       uiOutput('CPCode1'), #volcano code
-                                                                       br(),
-                                                                       plotlyOutput('plotly3') #volcano plot
-                                                      ),
-                                                      conditionalPanel('input.chSel2 == "Protein-Protein Interaction"',
-                                                                       plotOutput('proteinInt')
-                                                      )
-
-                                     ),
-
-                                     conditionalPanel('input.chSel == "Heatmaps"',
-                                                      conditionalPanel('input.heat1 == "Volcano"',
-                                                                       tags$strong('R Code: '),
-                                                                       uiOutput('CPCode2'),
-                                                                       br(),
-                                                                       plotlyOutput('plotly4')
-                                                      ),
-                                                      conditionalPanel('input.heat1 == "Cars"',
-                                                                       plotlyOutput('cars1')
-                                                      )
-                                     )
-                                 )
-                               )
-                             )
-                    )
-        )
+          )),
+          id="sidebarmap",
+          div('Heat maps and contour plots are visualization techniques to show
+                   data density on a map. They are particularly helpful when you have
+                   a lot of data points on the map and are mainly interested in their
+                   overall distribution.'),
+          br(),
+          selectInput(
+            inputId = 'chSel', 
+            label = 'Please Select Your Display Option', 
+            choices = c('', 'Contour Plots', 'Heatmaps'), 
+            selected = 'Contour Plots'),
+          #contour plots
+          conditionalPanel(
+            'input.chSel == "Contour Plots"',
+            selectInput(
+              inputId = 'chSel2', 
+              label = 'View An Example', 
+              choices = c('Volcano', 'Protein-Protein Interaction')
+            ),
+            conditionalPanel(
+              'input.chSel2 == "Volcano"',
+              checkboxInput(
+                inputId = 'contourLabel', 
+                label = 'Add Contour Labels', 
+                value = FALSE)
+            )
+          ),
+          #heat maps
+          conditionalPanel(
+            'input.chSel == "Heatmaps"',
+            selectInput(
+              inputId = 'heat1', 
+              label = 'View An Example', 
+              choices = c('Volcano', 'Cars'
+              )
+            ),
+            conditionalPanel(
+              'input.heat1 == "Volcano"',
+              sliderTextInput(
+                inputId = 'heatmapCol', 
+                label = 'Please Select Your Colorscale',
+                choices = c('purple+green', 'yellow+red', 'pink+purple', 'white+black'), 
+                grid = TRUE
+              )
+            )
+          )
+        ),
+        mainPanel(
+          box(title = NULL, 
+              style = 'background-color: #FFFFFF', 
+              width = NULL, 
+              height = NULL,
+              conditionalPanel(
+                'input.chSel == "Contour Plots"',
+                conditionalPanel(
+                  'input.chSel2 == "Volcano"',
+                  tags$b('In this section, we will use an embedded dataset named Volcano. 
+                                    It is a matrix containing 87 rows and 61 columns.'),
+                  br(),
+                  br(),
+                  tags$strong('R Code: '),
+                  uiOutput('CPCode1'), #volcano code
+                  br(),
+                  plotlyOutput('plotly3') #volcano plot
+                ),
+                conditionalPanel(
+                  'input.chSel2 == "Protein-Protein Interaction"',
+                  plotOutput('proteinInt')
+                )
+              ),
+              conditionalPanel(
+                'input.chSel == "Heatmaps"',
+                conditionalPanel(
+                  'input.heat1 == "Volcano"',
+                  tags$strong('R Code: '),
+                  uiOutput('CPCode2'),
+                  br(),
+                  plotlyOutput('plotly4')
+                ),
+                conditionalPanel('input.heat1 == "Cars"',
+                                 plotlyOutput('cars1')
+                )
+              )
+          ) # box
+        ) #mainpanel
+      ) # sidebarlayout
+    )# tabpanel
+  )
 ),
-#######Referencees Tab ###############
+
+#### Set up the References Page ----
 tabItem(
   tabName = "References",
   withMathJax(),
@@ -726,63 +830,30 @@ tabItem(
   p(class = "hangingindent",
     "Wickham, H., ggplot2: Elegant Graphics for Data Analysis, R package.
   Springer-Verlag New York, 2016."
-  ), # add ,
-  br(), # add
-  br(), #add
-  br(), #add
-  boastUtils::copyrightInfo() # add
-
+  ), 
+  br(), 
+  br(), 
+  br(), 
+  boastUtils::copyrightInfo() 
+)
+      )
+    )
+  )
 )
 
-                  )
-)))
-
+# Define server logic ----
 server <- function(input, output, session) {
-  # Initialize Learning Locker connection
-  # connection <- rlocker::connect(
-  #   session,
-  #   list(
-  #     base_url = "https://learning-locker.stat.vmhost.psu.edu/",
-  #     auth = "Basic ZDQ2OTNhZWZhN2Q0ODRhYTU4OTFmOTlhNWE1YzBkMjQxMjFmMGZiZjo4N2IwYzc3Mjc1MzU3MWZkMzc1ZDliY2YzOTNjMGZiNzcxOThiYWU2",
-  #     agent = rlocker::createAgent()
-  #   )
-  # )
-  #
-  # # Setup demo app and user.
-  # currentUser <-
-  #   connection$agent
-  #
-  # if (connection$status != 200) {
-  #   warning(paste(connection$status, "\nTry checking your auth token."))
-  # }
-
-  ##############end#########
   output$dataTable <- DT::renderDataTable({
     if(input$dataset == "cars")
       cars
     else
       trees
   })
-  
-  #output$Previewcar <- #previous
-    #renderTable({
-      #head(cars, 4)
-    #}, striped = TRUE, hover = TRUE, bordered = TRUE, spacing = 'xs')
-
-  #output$Previewtree <- #previous
-    #renderTable({
-      #head(trees, 4)
-    #}, striped = TRUE, hover = TRUE, bordered = TRUE, spacing = 'xs')
-
-  #output$Previewiris <- #previous
-    #renderTable({
-      #head(iris, 4)
-    #}, striped = TRUE, hover = TRUE, bordered = TRUE, spacing = 'xs')
   output$Previewiris <-
     DT::renderDataTable({
       iris
     }) 
-  ###KNITR
+  ###### KNITR
   observeEvent(input$eval, {
     withBusyIndicatorServer("eval", {
       output$knitDoc <- renderUI({
@@ -794,13 +865,13 @@ server <- function(input, output, session) {
           )
         )))
       })
-
+      
       output$output <- renderPrint({
         return(isolate(eval(parse(text = input$code))))
       })
     })
   })
-
+  
   output$knitDoc <- renderUI({
     input$eval
     return(isolate(HTML(
@@ -809,14 +880,16 @@ server <- function(input, output, session) {
         fragment.only = TRUE,
         quiet = FALSE
       )
-    )))
+    )
+    )
+    )
   })
-
+  
   output$output <- renderPrint({
     input$eval
     return(isolate(eval(parse(text = input$code))))
   })
-
+  
   observeEvent(input$info0, {
     sendSweetAlert(
       session = session,
@@ -840,9 +913,8 @@ server <- function(input, output, session) {
   observeEvent(input$next2, {
     updateTabsetPanel(session, 'VisualOne', selected = 'panel2')
   })
-
-  ############ Data Visualization ############
-  ###########One Single Variable Plot##############
+  ### Run the simple visualization Page ----
+  #### single variable ----
   output$oneDensity <-
     renderCachedPlot({
       if (input$dataset == 'cars') {
@@ -927,7 +999,8 @@ server <- function(input, output, session) {
            input$carsVariable,
            input$plotType,
            input$treesVariable)
-    })
+    }
+    )
 
   output$onehist <- renderCachedPlot({
     if (input$dataset == 'cars') {
@@ -1398,7 +1471,7 @@ server <- function(input, output, session) {
 
     }
   })
-  ###########Two Variables########
+  #### Two Variables ----
   output$twoscatter <- renderCachedPlot({
     if (input$continuous1 == 'Sepal.Length') {
       if (input$continuous2 == 'Petal.Length') {
@@ -1448,7 +1521,6 @@ server <- function(input, output, session) {
           geom_point(aes(colour = factor(Species))) +
           coord_trans(x = "log2", y = "log2") +
           ggtitle("Log Transformation")
-        #sunflowerplot(Sepal.Length~Petal.Length, data=iris, main="SunflowerPlot")
       }
       else if (input$continuous2 == 'Petal.Width') {
         ggplot(aes(Sepal.Length, Petal.Width), data = iris) +
@@ -1631,18 +1703,9 @@ server <- function(input, output, session) {
   })
 
 
-  ###########Exercises Part###################
-  # observeEvent(input$submit, {
-  #   updateButton(session, "nextq", disabled = FALSE)
-  # })
-  #
-  # observeEvent(input$submit, {
-  #   updateButton(session, "submit", disabled = TRUE)
-  # })
+  #### Exercises Part ----
 
   observeEvent(input$nextq, {
-    # updateButton(session, "submit", disabled = FALSE)
-    # updateButton(session, "nextq", disabled = TRUE)
     updateSelectInput(session,
                       "answer",
                       "pick an answer from below",
@@ -1655,12 +1718,11 @@ server <- function(input, output, session) {
   })
 
 
-  #### question bank ####
+  ###### question bank 
   value <- reactiveValues(index =  1,
                           mistake = 0,
                           correct = 0)
   ans <- as.matrix(bank[1:14, 6])
-  #ans <- data.frame(ans)
   index_list <- reactiveValues(list = sample(2:14, 10, replace = FALSE))
 
   observeEvent(input$nextq, {
@@ -1675,9 +1737,6 @@ server <- function(input, output, session) {
 
   output$question <- renderUI({
     h4(bank[value$index, 2])
-    # radioButtons(inputId = bank[value$index,1], label= bank[value$index, 2],
-    #              choiceNames=c(bank[value$index, 3], bank[value$index, 4], bank[value$index, 5]),
-    #              choiceValues = c("A", "B", "C"))
   })
 
   output$options <- renderUI({
@@ -1691,27 +1750,7 @@ server <- function(input, output, session) {
   observeEvent(input$answer, {
      req(input$answer, input$answer != '')
      answer <- isolate(input$answer)
-     #interacted_statement <- rLocker::createStatement(list(  #add # to 1677 
-       #verb = list(display = "interacted"),
-       #object = list(
-         #id = paste0(getCurrentAddress(session), "#", value$index),
-         #name = paste('Question', value$index),
-         #description = bank[value$index, 2]
-  
-       #),
-       #result = list(
-         #success = NA,
-         #response = paste(getResponseText(value$index, answer))
-       #)
-     #)
-  #)
-  
-     # Store statement in locker and return status
-     #status <- rLocker::store(session, interacted_statement)
-     enable("submit") #change
-  
-     #print(interacted_statement) # remove me
-     #print(status) # remove me
+     enable("submit") 
    })
 
 
@@ -1737,49 +1776,13 @@ server <- function(input, output, session) {
       updateButton(session, "submit", disabled = TRUE)
       updateButton(session, "reset", disabled = FALSE)
     }
-
-    # output$progress<-renderUI({
-    #   paste("You are currently on problem", 11-length(index_list$list), "/10")
-    # })
-
     answer <- isolate(input$answer)
-
-    #statement <- rLocker::createStatement(list( # add # to 1728
-      #verb = list(display = "answered"),
-      #object = list(
-        #id = paste0(getCurrentAddress(session), "#", value$index),
-        #name = paste('Question', value$index),
-        #description = bank[value$index, 2]
-      #),
-      #result = list(
-        #success = any(answer == ans[value$index, 1]),
-        #response = paste(getResponseText(value$index, answer))
-      #)
-    #))
-    #
-    # # Store statement in locker and return status
-    #status <- rLocker::store(session, statement) # add #
-    
-    #print(statement) # remove me # add #
-    #print(status) # remove me # add #
 
     output$mark <- boastUtils::renderIcon(
         icon = ifelse(any(answer == ans[value$index, 1]),
                       "correct",
                       "incorrect"),
         width = 50)
-    
-    #output$mark <- renderUI({
-      #if (any(answer == ans[value$index, 1])) {
-        #img(src = "correct.png", width = 30)
-      #}
-      #else{
-        #ig <- img(src = "incorrect.png", width = 30)
-        #w <-
-          #paste("You picked", answer, ", The correct answer is", ans[value$index, 1])
-        #HTML(paste(ig, w), sep = ' ')
-      #}
-    #})
   })
 
   observeEvent(input$reset, {
@@ -1798,8 +1801,8 @@ server <- function(input, output, session) {
       img(src = NULL, width = 30)
     })
   })
-
-  ###### Maps ######
+  ### Run the advanced visualization ----
+  #### Maps ----
   #a. usMap
   output$usMapOut1 <- renderCachedPlot({
     USArrests2 <- USArrests %>% mutate(state = row.names(.))
@@ -1896,7 +1899,7 @@ server <- function(input, output, session) {
   })
 
 
-  ###### 3D Plots ######
+  #### 3D Plots ----
   #a. Normal Simulation via Plotly
   output$plotly1 <- renderPlotly ({
     plot_ly(
@@ -1941,18 +1944,6 @@ server <- function(input, output, session) {
     }
   })
 
-  # output$ExCode <- renderUI ({
-  #   if (input$Exsel == 'Scatter Plot') {
-  #     tags$code('plot_ly(x = rnorm(', input$Exsel1, '), y = rnorm(', input$Exsel1, '), z = rnorm(', input$Exsel1, '), type = "scatter3d", mode = "markers")')
-  #   }
-  #   else if (input$Exsel == 'Line Plot') {
-  #     tags$code('plot_ly(x = rnorm(', input$Exsel1, '), y = rnorm(', input$Exsel1, '), z = rnorm(', input$Exsel1, '), type = "scatter3d", mode = "lines")')
-  #   }
-  #   else {
-  #     tags$code('plot_ly(x = rnorm(', input$Exsel1, '), y = rnorm(', input$Exsel1, '), z = rnorm(', input$Exsel1, '), type = "mesh3d", mode = "markers")')
-  #   }
-  # })
-
   #b. Basic Scatter Plot
   output$basicRcode <- renderUI ({
     tags$code(
@@ -1978,32 +1969,6 @@ server <- function(input, output, session) {
       zlab = input$basicZ
     )
   })
-
-  # #c.
-  # output$bspTableCopy <- renderTable ({
-  #   head(iris)
-  # })
-  #
-  # output$bspOut2 <- renderPlot ({
-  #   scatter3D(x, y, z, bty = "g", pch = 18,
-  #             col.var = as.integer(iris$Species),
-  #             col = c("#1B9E77", "#D95F02", "#7570B3"),
-  #             pch = 18, ticktype = "detailed",
-  #             colkey = list(at = c(2, 3, 4), side = 1,
-  #                           addlines = TRUE, length = 0.5, width = 0.5,
-  #                           labels = c("setosa", "versicolor", "virginica")) )
-  # })
-
-  # #d. 3D Plots with Confidence Intervals
-  # output$CIOut <- renderPlot ({
-  #   x <- iris[, input$CIX]
-  #   y <- iris[, input$CIY]
-  #   z <- iris[, input$CIZ]
-  #   CI <- list(z = matrix(nrow = length(x),
-  #                         data = rep(0.1, 2*length(x))))
-  #   scatter3D(x, y, z, phi = 0, bty = "g", col = gg.col(100),
-  #             pch = 18, CI = CI)
-  # })
 
   #e. 3D Texts Plot
   output$textRcode <- renderUI ({
@@ -2050,7 +2015,7 @@ server <- function(input, output, session) {
     )
   })
 
-  ###### 2D Line Plots ######
+  #### 2D Line Plots ----
   output$plotly2 <- renderPlotly ({
     trace_0 <-
       rnorm(as.numeric(input$LPsel1), mean = as.numeric(input$LPnum1))
@@ -2120,7 +2085,7 @@ server <- function(input, output, session) {
     )
   })
 
-  ###### Contour Plots and Heatmaps ######
+  #### Contour Plots and Heatmaps ----
   #contour plot
   output$proteinInt <- renderPlot ({
     potentials <-
