@@ -347,7 +347,11 @@ ui <- list(
                            uiOutput("question")%>% withSpinner(color="#FFFFFF"),
                            uiOutput("options"),
                            br(),
-                           selectInput("answer", "Select your answer from below", c("","A", "B", "C")),
+                           selectInput(
+                             "answer", 
+                             "Select your answer from below", 
+                             c("","A", "B", "C")
+                           ),
                            uiOutput("mark"),
                            tags$style(type='text/css', 
                                       '#question{font-size: 15px;
