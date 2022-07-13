@@ -78,8 +78,6 @@ ui <- list(
         tabItem(
           tabName = 'overview',
           h1('Data Visualization App'),
-          br(),
-          h2('About:'),
           p('This app illustrates R code for data visualization.'),
           br(),
           h2('Instructions'),

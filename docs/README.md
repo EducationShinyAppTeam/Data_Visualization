@@ -7,5 +7,4 @@
 
 # APP_DESCRIPTION
 
-The goal of this app is to let users familiar with graphing codes. Also, this app 
-is focused on the common types of xyz.
+The goal of this app is to let users familiar with graphing codes. 

@@ -10,8 +10,7 @@ Authors@R: c(
     person(given = "Yijun", family = "Yao", role = c("ctb"))
   )
 Chapter: Chapter 11
-Description: The goal of this app is to let users familiar with graphing codes. Also, this app 
-is focused on the common types of xyz.
+Description: The goal of this app is to let users familiar with graphing codes. 
 LearningObjectives: c(
     "The student will learn to understand Concept A in way z.",
     "The student will learn to understand Concept B as description y."
