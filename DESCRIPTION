@@ -4,10 +4,14 @@ Date: 2022-06-07
 Lifecycle: experimental
 Authors@R: c(
     person(given = "Neil", family = "Hatfield", email = "neil.hatfield@psu.edu", role = c("aut", "cre")),
-    person(given = "Robert", family = "Carey", email = "rpc5102@psu.edu", role = c("aut"))
+    person(given = "Anna (Yinqi)", family = "Zhang", role = c("aut")),
+    person(given = "Yiyun", family = "Gong", role = c("aut")),
+    person(given = "Ethan", family = "Wright", role = c("ctb")),
+    person(given = "Yijun", family = "Yao", role = c("ctb"))
   )
 Chapter: Chapter 11
-Description: This app is focused on the common types of xyz.
+Description: The goal of this app is to let users familiar with graphing codes. Also, this app 
+is focused on the common types of xyz.
 LearningObjectives: c(
     "The student will learn to understand Concept A in way z.",
     "The student will learn to understand Concept B as description y."

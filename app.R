@@ -35,13 +35,16 @@ ui <- list(
     skin = "green",
     header = dashboardHeader(
       title = 'Data Visualization',
-      tags$li(class = "dropdown", actionLink("info", icon("info"), class = "myClass")),
+      tags$li(
+        class = "dropdown", actionLink("info", icon("info"), class = "myClass")
+        ),
       tags$li(
         class = "dropdown",
         boastUtils::surveyLink(name = "Data_Visualization")
       ), 
       tags$li(
-        class = "dropdown",tags$a(href = "https://shinyapps.science.psu.edu/", icon("home"))
+        class = "dropdown",
+        tags$a(href = "https://shinyapps.science.psu.edu/", icon("home"))
       )
     ),
     
@@ -50,8 +53,10 @@ ui <- list(
       sidebarMenu(
         id = 'pages',
         menuItem('Overview', tabName = 'overview', icon = icon("tachometer-alt")),
-        menuItem('Simple Visualization', tabName = 'VisualOne', icon = icon('wpexplorer')),
-        menuItem('Advanced Visualization', tabName = 'exp4', icon = icon('wpexplorer')),
+        menuItem('Simple Visualization', tabName = 'VisualOne', 
+                 icon = icon('wpexplorer')),
+        menuItem('Advanced Visualization', tabName = 'exp4', 
+                 icon = icon('wpexplorer')),
         menuItem('References', tabName = "References", icon = icon("leanpub"))
       ),
       tags$div(class = "sidebar-logo",
@@ -104,10 +109,11 @@ ui <- list(
            and Yiyun Gong in 2019.
            Special Thanks to Grace (Yubaihe) Zhou for being incredibly helpful 
            with programming issues.
-           It was updated for formatting by Ethan Wright 2020'
+           It was updated for formatting by Ethan Wright 2020 
+          and Yijun Yao in 2022.'
           ),
           div(
-            class = "updated", "Last Update: 6/15/2022 by YY.")
+            class = "updated", "Last Update: 7/13/2022 by YY.")
         ),
         #### Set up the simple visualization Page ----
         tabItem(
@@ -279,7 +285,12 @@ ui <- list(
                          br(),
                          br(),
                          fluidRow(
-                           column(6,plotOutput(outputId="logTransformation", width="200%",height="350px")%>% withSpinner(color="#FFFFFF"))
+                           column(
+                             6,plotOutput(
+                               outputId="logTransformation", 
+                               width="200%",
+                               height="350px"
+                               )%>% withSpinner(color="#FFFFFF"))
                          ),
                          tags$strong('R Code: '),
                          fluidRow(
@@ -329,7 +340,8 @@ ui <- list(
                                tags$li("You can try the following questions"),
                                tags$li(
                                  "Test your code with the following R script
-                                       box with the RMarkDown output under the 'Knitted Output' header"
+                                  box with the RMarkDown output under 
+                                 the 'Knitted Output' header"
                                ),
                                tags$li(
                                  "In each turn, 10 questions will be 
@@ -355,8 +367,9 @@ ui <- list(
                            uiOutput("mark"),
                            tags$style(type='text/css', 
                                       '#question{font-size: 15px;
-                                              background-color: #FFFFFF;color: black;}',
-                                      '.well { padding: 10px; margin-bottom: 15px; max-width: 1000px; }')
+                                      background-color: #FFFFFF;color: black;}',
+                                      '.well { padding: 10px; margin-bottom: 15px; 
+                                      max-width: 1000px; }')
                          ),
                          fluidPage(
                            fluidRow(
@@ -365,23 +378,32 @@ ui <- list(
                                       style="display: inline-block",
                                       actionButton(
                                         inputId = 'submit', 
-                                        label = 'Submit', disabled = TRUE, style="success")
+                                        label = 'Submit', disabled = TRUE, 
+                                        style="success")
                                     ),
                                     div(
-                                      style="display: inline-block;vertical-align:top; width: 30px;",
+                                      style="display: 
+                                      inline-block;
+                                      vertical-align:top; width: 30px;",
                                       HTML("<br>")
                                     ),
                                     div(
                                       style="display: inline-block", 
-                                      bsButton(inputId = "nextq",label = "Next", disabled = TRUE)
+                                      bsButton(inputId = "nextq",
+                                               label = "Next", disabled = TRUE)
                                     ),
                                     div(
-                                      style="display: inline-block;vertical-align:top; width: 30px;",
+                                      style="display: 
+                                      inline-block;vertical-align:top; 
+                                      width: 30px;",
                                       HTML("<br>")
                                     ),
                                     div(
                                       style="display: inline-block", 
-                                      bsButton(inputId = "reset",label = "Restart", style="danger", disabled = TRUE))
+                                      bsButton(
+                                        inputId = "reset",
+                                        label = "Restart", 
+                                        style="danger", disabled = TRUE))
                              )
                            )
                          ),
@@ -543,19 +565,22 @@ tabItem(
               selectInput(
                 inputId = 'basicX', 
                 label = 'Variable for X-Axis',
-                choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
+                choices = c('Sepal.Length', 'Sepal.Width', 
+                            'Petal.Length', 'Petal.Width'),
                 selected = 'Sepal.Length', multiple = FALSE
               ),
               selectInput(
                 inputId = 'basicY', 
                 label = 'Variable for Y-Axis', 
-                choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
+                choices = c('Sepal.Length', 'Sepal.Width', 
+                            'Petal.Length', 'Petal.Width'),
                 selected = 'Sepal.Width', multiple = FALSE
               ),
               selectInput(
                 inputId = 'basicZ', 
                 label = 'Variable for Z-Axis', 
-                choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
+                choices = c('Sepal.Length', 'Sepal.Width', 
+                            'Petal.Length', 'Petal.Width'),
                 selected = 'Petal.Length', multiple = FALSE
               )
             ),
@@ -565,19 +590,22 @@ tabItem(
               selectInput(
                 inputId = 'CIX',
                 label = 'Variable for X-Axis', 
-                choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
+                choices = c('Sepal.Length', 'Sepal.Width', 
+                            'Petal.Length', 'Petal.Width'),
                 selected = 'Sepal.Length', multiple = FALSE
               ),
               selectInput(
                 inputId = 'CIY', 
                 label = 'Variable for Y-Axis', 
-                choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
+                choices = c('Sepal.Length', 'Sepal.Width', 
+                            'Petal.Length', 'Petal.Width'),
                 selected = 'Sepal.Width', multiple = FALSE
               ),
               selectInput(
                 inputId = 'CIZ', 
                 label = 'Variable for Z-Axis', 
-                choices = c('Sepal.Length', 'Sepal.Width', 'Petal.Length', 'Petal.Width'),
+                choices = c('Sepal.Length', 'Sepal.Width', 
+                            'Petal.Length', 'Petal.Width'),
                 selected = 'Petal.Length', multiple = FALSE
               )
             )
@@ -730,7 +758,8 @@ tabItem(
               sliderTextInput(
                 inputId = 'heatmapCol', 
                 label = 'Please Select Your Colorscale',
-                choices = c('purple+green', 'yellow+red', 'pink+purple', 'white+black'), 
+                choices = c('purple+green', 'yellow+red', 'pink+purple', 
+                            'white+black'), 
                 grid = TRUE
               )
             )
@@ -745,8 +774,9 @@ tabItem(
                 'input.chSel == "Contour Plots"',
                 conditionalPanel(
                   'input.chSel2 == "Volcano"',
-                  tags$b('In this section, we will use an embedded dataset named Volcano. 
-                                    It is a matrix containing 87 rows and 61 columns.'),
+                  tags$b(
+                  'In this section, we will use an embedded dataset named Volcano. 
+                  It is a matrix containing 87 rows and 61 columns.'),
                   br(),
                   br(),
                   tags$strong('R Code: '),
@@ -814,7 +844,8 @@ tabItem(
   p(class = "hangingindent",
     "Molecular Organisation and Assembly in Cells(2007). Contour Plots of Matrix Data.
   University of Warwick: Warwick, UK. 
-  Available from https://warwick.ac.uk/fac/sci/moac/people/students/peter_cock/r/matrix_contour/#references"),
+  Available from 
+  https://warwick.ac.uk/fac/sci/moac/people/students/peter_cock/r/matrix_contour/#references"),
   p(class = "hangingindent",
     "Nijs, V., Fang, F., Trestle Technology, LLC and Allen, J. (2019). 
   shinyAce: Ace Editor Bindings for Shiny, R package.
@@ -898,7 +929,8 @@ server <- function(input, output, session) {
     sendSweetAlert(
       session = session,
       title = "Instructions:",
-      text = "Move the sliders or select from the dropdown menus and view the R code that produces the results.",
+      text = "Move the sliders or select from the dropdown menus and view the R 
+      code that produces the results.",
       type = NULL
     )
   })
@@ -906,7 +938,8 @@ server <- function(input, output, session) {
     sendSweetAlert(
       session = session,
       title = "Instructions:",
-      text = "Select the variables or the dataset to be used. Select answers for the exercise.",
+      text = "Select the variables or the dataset to be used. Select answers 
+      for the exercise.",
       type = NULL
     )
   })
@@ -1897,7 +1930,9 @@ server <- function(input, output, session) {
         hoverinfo = "text",
         text = ~ paste(df$name, "<br />", df$pop / 1e6, " million")
       ) %>%
-      layout(title = '2014 US city populations<br>(Click legend to toggle)', geo = g)
+      layout(
+        title = '2014 US city populations<br>(Click legend to toggle)', geo = g
+        )
     g
     p
   })
@@ -1951,7 +1986,8 @@ server <- function(input, output, session) {
   #b. Basic Scatter Plot
   output$basicRcode <- renderUI ({
     tags$code(
-      'scatter3D(x, y, z, clab = c("Sepal", "Width (cm)"), xlab = input$basicX, ylab = input$basicY, zlab = input$basicZ)'
+      'scatter3D(x, y, z, clab = c("Sepal", "Width (cm)"), 
+      xlab = input$basicX, ylab = input$basicY, zlab = input$basicZ)'
     )
   })
 
@@ -2084,8 +2120,9 @@ server <- function(input, output, session) {
 
   output$LPCode <- renderUI ({
     tags$code(
-      'plot_ly(data, x = ~x, y = ~trace_0, name = "trace 0", type = "scatter", mode = "lines") %>%
-              add_trace(y = ~trace_1, name = "trace 1", mode = "markers + lines")'
+      'plot_ly(data, x = ~x, y = ~trace_0, name = "trace 0", 
+               type = "scatter", mode = "lines") %>%
+       add_trace(y = ~trace_1, name = "trace 1", mode = "markers + lines")'
     )
   })
 
@@ -2145,12 +2182,15 @@ server <- function(input, output, session) {
   output$CPCode1 <- renderUI ({
     if (input$contourLabel == FALSE) {
       tags$code(
-        'plot_ly(z = volcano, type = "contour", colors = colorRamp(c("purple", "green")))'
+        'plot_ly(z = volcano, type = "contour", 
+        colors = colorRamp(c("purple", "green")))'
       )
     }
     else {
       tags$code(
-        'plot_ly(z = volcano, type = "contour", colors = colorRamp(c("purple", "green")), contours = list(showlabels = TRUE))'
+        'plot_ly(z = volcano, type = "contour", 
+        colors = colorRamp(c("purple", "green")), 
+        contours = list(showlabels = TRUE))'
       )
     }
   })
@@ -2183,17 +2223,21 @@ server <- function(input, output, session) {
   output$CPCode2 <- renderUI ({
     if (input$heatmapCol == 'purple+green') {
       tags$code(
-        'plot_ly(z = volcano, type = "heatmap", colors = colorRamp(c("purple", "green")))'
+        'plot_ly(z = volcano, type = "heatmap", 
+        colors = colorRamp(c("purple", "green")))'
       )
     }
     else if (input$heatmapCol == 'yellow+red') {
-      tags$code('plot_ly(z = volcano, type = "heatmap", colors = colorRamp(c("yellow", "red")))')
+      tags$code('plot_ly(z = volcano, type = "heatmap", 
+                colors = colorRamp(c("yellow", "red")))')
     }
     else if (input$heatmapCol == 'pink+purple') {
-      tags$code('plot_ly(z = volcano, type = "heatmap", colors = colorRamp(c("pink", "purple")))')
+      tags$code('plot_ly(z = volcano, type = "heatmap",
+                colors = colorRamp(c("pink", "purple")))')
     }
     else {
-      tags$code('plot_ly(z = volcano, type = "heatmap", colors = colorRamp(c("white", "black")))')
+      tags$code('plot_ly(z = volcano, type = "heatmap", 
+                colors = colorRamp(c("white", "black")))')
     }
   })
 
