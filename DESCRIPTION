@@ -10,10 +10,10 @@ Authors@R: c(
     person(given = "Yijun", family = "Yao", role = c("ctb"))
   )
 Chapter: Chapter 11
-Description: The goal of this app is to let users familiar with graphing codes. 
+Description: The goal of the app is to provide users with a comprehensive introduction to data visualization, covering both basic and advanced techniques using ggplot, Rplot, and other tools.
 LearningObjectives: c(
-    "The student will learn to understand Concept A in way z.",
-    "The student will learn to understand Concept B as description y."
+    "The student will learn to understand how to create simple data visualization plots using ggplot and Rplot.",
+    "The student will learn to understand how to create advanced data visualization using 3D plots, line plots, contour plots, and heat maps."
   )
 DisplayMode: Normal
 URL: https://psu-eberly.shinyapps.io/Data_Visualization

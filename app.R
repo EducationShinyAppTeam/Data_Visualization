@@ -14,16 +14,13 @@ library(DT)
 library(dplyr)
 library(mosaic)
 library(plot3D)
-library(plotly)
 library(datasets)
 library(learnr)
 library(knitr)
 library(rmarkdown)
-library(shinyAce)
-library(ggmap)
 
 source("helpers.R")
-
+source("aceText.R")
 bank <- read.csv("questionbank.csv")
 bank <- data.frame(
   lapply(bank, as.character), 
@@ -53,6 +50,7 @@ ui <- list(
       sidebarMenu(
         id = 'pages',
         menuItem('Overview', tabName = 'overview', icon = icon("tachometer-alt")),
+        menuItem('Prerequisites', tabName = 'prerequisite', icon = icon("book")),
         menuItem('Simple Visualization', tabName = 'VisualOne', 
                  icon = icon('wpexplorer')),
         menuItem('Advanced Visualization', tabName = 'exp4', 
@@ -69,9 +67,6 @@ ui <- list(
           rel = "stylesheet", type = "text/css", 
           href = "https://educationshinyappteam.github.io/Style_Guide/theme/boast.css")
       ),
-      tags$style(
-        type = "text/css", ".content-wrapper,.right-side {background-color: white;}"
-        ),
       useShinyjs(),
       tabItems(
         #### Set up the Overview Page ----
@@ -92,8 +87,8 @@ ui <- list(
           div(
             style = 'text-align: center',
             bsButton(
-              inputId = 'go2',
-              label = 'Explore',
+              inputId = 'go2p',
+              label = 'Go to Prerquisite page',
               icon = icon('bolt'),
               size = 'large', 
               class='circle grow')
@@ -113,6 +108,29 @@ ui <- list(
           div(
             class = "updated", "Last Update: 7/13/2022 by YY.")
         ),
+        #### Set up the Prerequisites Page ----
+        tabItem(
+          tabName = "prerequisite",
+          withMathJax(),
+          h2("Introduction to Data Visualization"),
+          p("Data visualization is the graphical representation of data to gain insights and communicate information effectively. It involves creating visual representations, such as charts, graphs, and maps, to explore patterns, trends, and relationships in data. Data visualization aids in understanding complex datasets, identifying outliers, and presenting findings to a broader audience."),
+          p("Some commonly used libraries for data visualization in R include ggplot and Rplot."),
+          h4("Examples of Plots:"),
+          tags$ul(
+            tags$li("Density plot: Shows the distribution of a continuous variable by estimating its probability density function."),
+            tags$li("Histogram plot: Displays the distribution of a continuous variable by dividing the data into bins and showing the frequency or density of observations in each bin."),
+            tags$li("Bar plot: Represents categorical data using rectangular bars, where the height or length of each bar corresponds to the frequency or value of the category."),
+            tags$li("Normal Q-Q plot: Compares the quantiles of a sample to the quantiles of a specified theoretical distribution (usually the normal distribution) to assess if the sample follows a particular distribution."),
+            tags$li("Scatter plot: Displays the relationship between two continuous variables by plotting individual data points as dots on a two-dimensional coordinate system."),
+            tags$li("Log transformation plot: Applies a logarithmic transformation to one or both axes of a plot, which can help visualize data with exponential or highly skewed distributions."),
+            tags$li("Box plot: Summarizes the distribution of a continuous variable using a box and whisker plot, showing the median, quartiles, and potential outliers."),
+            tags$li("3D plots: Display data in a three-dimensional space, allowing visualization of relationships among three variables."),
+            tags$li("Line plots: Represent data points connected by lines, commonly used for time series or continuous data analysis."),
+            tags$li("Contour plots: Visualize 3D data on a 2D plane, using contour lines to represent levels of a continuous variable."),
+            tags$li("Heat maps: Use colors to represent values in a matrix or grid, providing a visual summary of patterns or intensities.")
+            
+          )
+        ),
         #### Set up the simple visualization Page ----
         tabItem(
           tabName = 'VisualOne',
@@ -128,13 +146,6 @@ ui <- list(
               sidebarLayout(
                 sidebarPanel(
                   id="sidebar",
-                  tags$head(tags$style(
-                    HTML('#sidebar{
-                                                background-color: #FFFFFF;
-                                            }'
-                    )
-                  )
-                  ),
                   checkboxInput("previewData", "Preview of Datasets"),
                   ##### select between plot and ggplot
                   selectInput(
@@ -164,38 +175,58 @@ ui <- list(
                       inputId="treesVariable", label="Select Variables",
                       choices = c("Girth", "Height", "Volume"),
                       selected = 'Girth')
-                  )
-                ),
-                mainPanel(
+                  ),
                   conditionalPanel(
                     condition="input.previewData==1",
                     fluidRow(
-                      column(2, p(strong("Dataset"))),
-                      column(4, DT::dataTableOutput("dataTable")),
+                      column(
+                        width = 1,
+                        p(strong("Dataset"))
+                      )
+                    ),
+                    fluidRow(
+                      column(
+                        width = 1,
+                        DT::dataTableOutput("dataTable")
+                      )
                     )
                   ),
+                  
+                ),
+                mainPanel(
                   fluidRow(
                     column(6,
-                           plotOutput(
-                             outputId="oneDensity", 
-                             width="180%",
-                             height="350px")%>% withSpinner(color="#FFFFFF")),
-                  ),
-                  tags$strong('R Code: '),
-                  fluidRow( 
-                    column(width = 10, uiOutput(outputId="DensityoneCode")),
+                      plotOutput(
+                        outputId = "oneDensity",
+                        width = "110%",
+                        height = "350px"
+                      ) %>% withSpinner(color = "#FFFFFF")
+                    ),
+                    column(
+                      width = 5,
+                      tags$strong('R code: '),
+                      uiOutput('DensityoneCode'),
+                     
+                    )
+                    
                   ),
                   br(),
                   br(),
                   fluidRow(
                     column(6,
                            plotOutput(
-                             outputId="onehist", width="180%",
-                             height="350px")%>% withSpinner(color="#FFFFFF"))
-                  ),
-                  tags$strong('R Code: '),
-                  fluidRow(
-                    column(width = 10, uiOutput(outputId="HistogramoneCode"))
+                             outputId="onehist",
+                             width="110%",
+                             height="350px")%>% withSpinner(color="#FFFFFF")
+                    ),
+                    column(
+                      width = 5,
+                      tags$strong('R code: '),
+                      uiOutput('HistogramoneCode'),
+                     
+                      
+                    )
+                    
                   ),
                   br(),
                   br(),
@@ -203,13 +234,18 @@ ui <- list(
                     column(6,
                            plotOutput(
                              outputId="onebar", 
-                             width="180%",
-                             height="350px")%>% withSpinner(color="#1E7B14")),
+                             width="110%",
+                             height="350px")%>% withSpinner(color="#1E7B14")
+                    ),
+                    column(
+                      width = 5,
+                      tags$strong('R code: '),
+                      uiOutput('BarCode'),
+                      
+                     
+                    )
                   ),
-                  tags$strong('R Code: '),
-                  fluidRow(
-                    column(width = 10, uiOutput(outputId="BarCode")),
-                  ),
+                  
                   br(),
                   br(),
                   fluidRow(
@@ -217,14 +253,19 @@ ui <- list(
                            plotOutput(
                              outputId="oneqq", 
                              width="180%",
-                             height="350px")%>% withSpinner(color="#1E7B14"))
+                             height="350px")%>% withSpinner(color="#1E7B14")
+                    ),
+                    column(
+                      width = 8,
+                      tags$strong('R code: '),
+                      uiOutput('qqCode'),
+                      
+                    
+                    )
                   ),
-                  tags$strong('R Code: '),
-                  fluidRow(
-                    column(width = 10, uiOutput(outputId="qqCode"))
-                  ),
-                  br(),
-                  br()
+                    
+                  
+                  
                 )
               )
             ),
@@ -237,11 +278,6 @@ ui <- list(
                      sidebarLayout(
                        sidebarPanel(
                          id="sidebar",
-                         tags$head(tags$style(
-                           HTML('#sidebar{
-                                                background-color: #FFFFFF;
-                                            }')
-                         )),
                          ###### select continuous variable 1
                          checkboxInput("previewDataTwo", "Preview of Datasets"),
                          selectInput(
@@ -265,8 +301,8 @@ ui <- list(
                          conditionalPanel(
                            condition="input.previewDataTwo==1",
                            fluidRow(
-                             column(2, p(strong("Dataset iris"))),
-                             column(5, dataTableOutput("Previewiris"))
+                             column(1, p(strong("Dataset iris"))),
+                             column(6, dataTableOutput("Previewiris"))
                            )
                          ),
                          fluidRow(
@@ -407,37 +443,14 @@ ui <- list(
                          ),
                          
                          h2("Try Your Code"),
-                         aceEditor("rmd",
-                                   mode="markdown", 
-                                   value='This is some markdown text. 
-                                  It may also have embedded R code
-which will be executed. Please also read the output
-message for more hints.
-
-you can add a new code chuck with following two lines
-```{r}
-```
-```{r}
-#structure on datasets we used in previous cases
-str(cars)
-str(trees)
-str(iris)
-```
-It can even include graphical elements.
-```{r}
-#ggplot with one variable
-#ggplot(aes(x=dist), data=cars)+geom_histogram()
-```
-```{r}
-#ggplot with two variable
-#ggplot(aes(x=Sepal.Length, y=Petal.Length), data=iris)+
-#geom_line()
-```
-```{r}
-#Rplot with one variable
-plot(cars$speed)
-```
-'),
+                         aceEditor(
+                           outputId = "rmd",
+                           mode = "markdown",
+                           value = initialAceText,
+                           theme = "xcode",
+                           wordWrap = TRUE
+                         ),
+                         
                                 column(6,
                                        withBusyIndicatorUI(
                                          actionButton("eval", "Run")))
@@ -710,11 +723,7 @@ tabItem(
       br(),
       sidebarLayout(
         sidebarPanel(
-          tags$head(tags$style(
-            HTML('#sidebarmap{
-                                                background-color: #FFFFFF;
-                                            }')
-          )),
+          
           id="sidebarmap",
           div('Heat maps and contour plots are visualization techniques to show
                    data density on a map. They are particularly helpful when you have
@@ -878,13 +887,13 @@ tabItem(
 server <- function(input, output, session) {
   output$dataTable <- DT::renderDataTable({
     if(input$dataset == "cars")
-      cars
+      datatable(cars[1:10, ], options = list(pageLength = 10))
     else
-      trees
+      datatable(trees[1:10, ], options = list(pageLength = 10))
   })
   output$Previewiris <-
     DT::renderDataTable({
-      iris
+      datatable(iris[1:10, ], options = list(pageLength = 10))
     }) 
   ###### KNITR
   observeEvent(input$eval, {
@@ -893,7 +902,7 @@ server <- function(input, output, session) {
         return(isolate(HTML(
           knit2html(
             text = input$rmd,
-            fragment.only = TRUE,
+            
             quiet = FALSE
           )
         )))
@@ -905,18 +914,17 @@ server <- function(input, output, session) {
     })
   })
   
-  output$knitDoc <- renderUI({
-    input$eval
-    return(isolate(HTML(
-      knit2html(
-        text = input$rmd,
-        fragment.only = TRUE,
-        quiet = FALSE
+  output$knitDoc <- renderUI(
+    expr = {
+      HTML(
+        knit2html(
+          text = input$rmd,
+          template = FALSE,
+          quiet = TRUE
+        )
       )
-    )
-    )
-    )
-  })
+    }
+  )
   
   output$output <- renderPrint({
     input$eval
@@ -941,8 +949,8 @@ server <- function(input, output, session) {
       type = NULL
     )
   })
-  observeEvent(input$go2, {
-    updateTabItems(session, 'pages', 'VisualOne')
+  observeEvent(input$go2p, {
+    updateTabItems(session, 'pages', 'prerequisite')
   })
 
   observeEvent(input$next2, {
@@ -1310,202 +1318,188 @@ server <- function(input, output, session) {
            input$treesVariable)
     })
 
-  output$DensityoneCode <- renderUI({ 
+  output$DensityoneCode <- renderText({
     if (input$dataset == 'cars') {
       if (input$plotType == 'plot') {
-        tags$code(
+        code <- paste0(
           'plot(density(',
           input$carsVariable,
-          ', data =',
+          ', data = ',
           input$dataset,
-          '))',
-          seq = ''
+          '))'
         )
-      }
-      else if (input$plotType == 'ggplot') {
-        tags$code(
+      } else if (input$plotType == 'ggplot') {
+        code <- paste0(
           "ggplot(aes(",
           input$carsVariable,
-          "), data=cars)+
-          geom_density(color='darkblue', fill='lightblue', alpha=0.4)+
-          ggtitle('Density Plot')",
-          seq = ''
+          "), data = cars) + ",
+          "geom_density(color = 'darkblue', fill = 'lightblue', alpha = 0.4) + ",
+          "ggtitle('Density Plot')"
         )
       }
-    }
-    else{
+    } else {
       if (input$plotType == 'plot') {
-        tags$code(
+        code <- paste0(
           'plot(density(',
           input$dataset,
           '$',
           input$treesVariable,
-          ')',
-          seq = ''
+          '))'
         )
-      }
-      else if (input$plotType == 'ggplot') {
-        tags$code(
+      } else if (input$plotType == 'ggplot') {
+        code <- paste0(
           "ggplot(aes(",
           input$treesVariable,
-          "), data=trees)+
-              geom_density(color='darkblue', fill='lightblue', alpha=0.4)+
-              ggtitle('Density Plot')",
-          seq = ''
+          "), data = trees) + ",
+          "geom_density(color = 'darkblue', fill = 'lightblue', alpha = 0.4) + ",
+          "ggtitle('Density Plot')"
         )
       }
     }
+    
+    code
   })
+  
+  
 
-  output$HistogramoneCode <- renderUI({
+  output$HistogramoneCode <- renderText({
     if (input$dataset == 'cars') {
       if (input$plotType == 'plot') {
-        tags$code(
+        code <- paste0(
           'hist(',
           input$carsVariable,
-          ', data =',
+          ', data = ',
           input$dataset,
-          ')',
-          seq = '')
-      }
-      else{
-        tags$code(
+          ')'
+        )
+      } else {
+        code <- paste0(
           "ggplot(aes(",
           input$carsVariable,
-          "), data=cars)+
-          geom_histogram(color='darkblue', fill='lightblue', alpha=0.4)+
-          ggtitle('Histogram')",
-          seq = ''
+          "), data = cars) + ",
+          "geom_histogram(color = 'darkblue', fill = 'lightblue', alpha = 0.4) + ",
+          "ggtitle('Histogram')"
         )
       }
-    }
-    else{
+    } else {
       if (input$plotType == 'plot') {
-        tags$code(
+        code <- paste0(
           'hist(',
           input$treesVariable,
-          ', data =',
+          ', data = ',
           input$dataset,
-          ')',
-          seq = '')
-      }
-      else{
-        tags$code(
+          ')'
+        )
+      } else {
+        code <- paste0(
           "ggplot(aes(",
           input$treesVariable,
-          "), data=trees)+
-              geom_histogram(color='darkblue', fill='lightblue', alpha=0.4)+
-              ggtitle('Histogram')",
-          seq = ''
+          "), data = trees) + ",
+          "geom_histogram(color = 'darkblue', fill = 'lightblue', alpha = 0.4) + ",
+          "ggtitle('Histogram')"
         )
       }
     }
+    
+    code
   })
-
-  output$BarCode <- renderUI({
+  
+  output$BarCode <- renderText({
     if (input$dataset == 'cars') {
       if (input$plotType == 'plot') {
-        tags$code(
+        code <- paste0(
           'barplot(',
           input$carsVariable,
-          ', data =',
+          ', data = ',
           input$dataset,
-          ')',
-          seq = '')
-      }
-      else{
-        tags$code(
+          ')'
+        )
+      } else {
+        code <- paste0(
           "ggplot(aes(",
           input$carsVariable,
-          "), data=cars)+
-                geom_freqpoly(bins = 30)+
-                geom_area(stat = 'bin', bins = 30,
-                          color='darkblue', fill='lightblue', alpha=0.4)+
-                ggtitle('Frequency polygon')"
+          "), data = cars) + ",
+          "geom_freqpoly(bins = 30) + ",
+          "geom_area(stat = 'bin', bins = 30, color = 'darkblue', fill = 'lightblue', alpha = 0.4) + ",
+          "ggtitle('Frequency polygon')"
         )
       }
-    }
-    else{
+    } else {
       if (input$plotType == 'plot') {
-        tags$code(
+        code <- paste0(
           'barplot(',
           input$treesVariable,
-          ', data =',
+          ', data = ',
           input$dataset,
-          ')',
-          seq = '')
-      }
-      else{
-        tags$code(
+          ')'
+        )
+      } else {
+        code <- paste0(
           "ggplot(aes(",
           input$treesVariable,
-          "), data=trees)+
-              geom_freqpoly(bins = 30)+
-              geom_area(stat = 'bin', bins = 30,
-              color='darkblue', fill='lightblue', alpha=0.4)+
-              ggtitle('Frequency polygon')"
+          "), data = trees) + ",
+          "geom_freqpoly(bins = 30) + ",
+          "geom_area(stat = 'bin', bins = 30, color = 'darkblue', fill = 'lightblue', alpha = 0.4) + ",
+          "ggtitle('Frequency polygon')"
         )
       }
     }
+    
+    code
   })
-
-  output$qqCode <- renderUI({
+  
+  output$qqCode <- renderText({
     if (input$dataset == 'cars') {
       if (input$plotType == 'plot') {
-        tags$code(
+        code <- paste0(
           'qqnorm(',
           input$carsVariable,
-          ', data =',
+          ', data = ',
           input$dataset,
-          ')',
-          '\n qqline(',
+          ')\n',
+          'qqline(',
           input$carsVariable,
-          ', data =',
+          ', data = ',
           input$dataset,
-          ')',
-          seq = ''
+          ')'
+        )
+      } else {
+        code <- paste0(
+          "ggplot(aes(sample = ",
+          input$carsVariable,
+          "), data = cars) + ",
+          "stat_qq(color = 'darkblue', fill = 'lightblue', alpha = 0.4) + ",
+          "stat_qq_line(color = 'red')"
         )
       }
-      else{
-        tags$code(
-          "ggplot(aes(sample=",
-          input$carsVariable,
-          "), data=cars)+
-          stat_qq(color='darkblue', fill='lightblue', alpha=0.4)+
-          stat_qq_line(color='red')",
-          seq = ''
-        )
-      }
-    }
-    else{
+    } else {
       if (input$plotType == 'plot') {
-        tags$code(
+        code <- paste0(
           'qqnorm(',
           input$treesVariable,
-          ', data =',
+          ', data = ',
           input$dataset,
-          ')',
+          ')\n',
           'qqline(',
           input$treesVariable,
-          ', data =',
+          ', data = ',
           input$dataset,
-          ')',
-          seq = ''
+          ')'
         )
-      }
-      else{
-        tags$code(
-          "ggplot(aes(sample=",
+      } else {
+        code <- paste0(
+          "ggplot(aes(sample = ",
           input$treesVariable,
-          "), data=trees)+
-              stat_qq(color='darkblue', fill='lightblue', alpha=0.4)+
-              stat_qq_line(color='red')",
-          seq = ''
+          "), data = trees) + ",
+          "stat_qq(color = 'darkblue', fill = 'lightblue', alpha = 0.4) + ",
+          "stat_qq_line(color = 'red')"
         )
       }
-
     }
+    
+    code
   })
+  
   #### Two Variables ----
   output$twoscatter <- renderCachedPlot({
     if (input$continuous1 == 'Sepal.Length') {
@@ -1835,6 +1829,7 @@ server <- function(input, output, session) {
     output$mark <- renderUI({
       img(src = NULL, width = 30)
     })
+    
   })
   ### Run the advanced visualization ----
   #### Maps ----

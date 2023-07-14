@@ -7,4 +7,4 @@
 
 # APP_DESCRIPTION
 
-The goal of this app is to let users familiar with graphing codes. 
+The goal of the app is to provide users with a comprehensive introduction to data visualization, covering both basic and advanced techniques using ggplot, Rplot, and other tools.
