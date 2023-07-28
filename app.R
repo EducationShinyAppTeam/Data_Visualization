@@ -1,4 +1,5 @@
 # Load Packages ----
+
 library(shiny)
 library(shinydashboard)
 library(shinyBS)
@@ -8,7 +9,9 @@ library(plotly)
 library(ggplot2)
 library(shinyAce)
 library(shinycssloaders)
-library(ggmap)
+library(sf)
+library(lwgeom)
+library(plotly)
 library(boastUtils)
 library(DT)
 library(dplyr)
@@ -69,7 +72,7 @@ ui <- list(
       ),
       useShinyjs(),
       tabItems(
-        #### Set up the Overview Page ----
+        #### Overview Page ----
         tabItem(
           tabName = 'overview',
           h1('Data Visualization App'),
@@ -77,11 +80,13 @@ ui <- list(
           br(),
           h2('Instructions'),
           tags$ol(
-            tags$li("Simple data visualization section introduces
-                     how to create some commonly used plots with ggplot 
-                     and Rplot with exercises at the end."),
-            tags$li("Advanced Data Visualization section
-                      introduces 3D plots, line plots, contour plots, and heat maps.")
+            tags$li("Familiarize yourself with data visualization and the different types 
+                    of plots by reviewing the prerequisites pages."),
+            tags$li("Engage in practical exercises involving simple data visualization, where 
+                    you will manipulate different datasets using various plot types. This section introduces 
+                    the creation of commonly used plots using ggplot and Rplot, concluding with exercise questions."),
+            tags$li("In the Advanced Data Visualization section, you will gain in-depth knowledge about 3D plots, 
+                    line plots, contour plots, and heat maps.")
           ),
           br(),
           div(
@@ -103,35 +108,118 @@ ui <- list(
            Special Thanks to Grace (Yubaihe) Zhou for being incredibly helpful 
            with programming issues.
            It was updated for formatting by Ethan Wright 2020 
-          and Yijun Yao in 2022.'
+          and Yijun Yao in 2022. This app was updated in 2023 by Aisiri C.Narendra'
           ),
           div(
-            class = "updated", "Last Update: 7/13/2022 by YY.")
+            class = "updated", "Last Update: 7/18/2023 by ACN.")
         ),
-        #### Set up the Prerequisites Page ----
+        #### Prerequisites Page ----
         tabItem(
           tabName = "prerequisite",
           withMathJax(),
           h2("Introduction to Data Visualization"),
-          p("Data visualization is the graphical representation of data to gain insights and communicate information effectively. It involves creating visual representations, such as charts, graphs, and maps, to explore patterns, trends, and relationships in data. Data visualization aids in understanding complex datasets, identifying outliers, and presenting findings to a broader audience."),
+          p("Data visualization is the graphical representation of data to gain insights and communicate information 
+            effectively. It involves creating visual representations, such as charts, graphs, and maps, to explore 
+            patterns, trends, and relationships in data. Data visualization aids in understanding complex datasets, 
+            identifying outliers, and presenting findings to a broader audience."),
           p("Some commonly used libraries for data visualization in R include ggplot and Rplot."),
-          h4("Examples of Plots:"),
+          p("Access the cheat sheet for more information on data visualization with ggplot2 ", 
+            a(href = 'https://rstudio.github.io/cheatsheets/html/data-visualization.html?_gl=1*hpq94h*
+              _ga*MTE1NTY3OTU3MS4xNjg5Njc2MDcx*_ga_2C0WZ1JHG0*MTY4OTY3NjA3MS4xLjAuMTY4OTY3NjA3MS4wLjAuMA', 
+              'Data Visualization cheatsheet', target="_blank"),),
+          
+          h2("Examples of plots"),
           tags$ul(
-            tags$li("Density plot: Shows the distribution of a continuous variable by estimating its probability density function."),
-            tags$li("Histogram plot: Displays the distribution of a continuous variable by dividing the data into bins and showing the frequency or density of observations in each bin."),
-            tags$li("Bar plot: Represents categorical data using rectangular bars, where the height or length of each bar corresponds to the frequency or value of the category."),
-            tags$li("Normal Q-Q plot: Compares the quantiles of a sample to the quantiles of a specified theoretical distribution (usually the normal distribution) to assess if the sample follows a particular distribution."),
-            tags$li("Scatter plot: Displays the relationship between two continuous variables by plotting individual data points as dots on a two-dimensional coordinate system."),
-            tags$li("Log transformation plot: Applies a logarithmic transformation to one or both axes of a plot, which can help visualize data with exponential or highly skewed distributions."),
-            tags$li("Box plot: Summarizes the distribution of a continuous variable using a box and whisker plot, showing the median, quartiles, and potential outliers."),
-            tags$li("3D plots: Display data in a three-dimensional space, allowing visualization of relationships among three variables."),
-            tags$li("Line plots: Represent data points connected by lines, commonly used for time series or continuous data analysis."),
-            tags$li("Contour plots: Visualize 3D data on a 2D plane, using contour lines to represent levels of a continuous variable."),
-            tags$li("Heat maps: Use colors to represent values in a matrix or grid, providing a visual summary of patterns or intensities.")
+            box(
+              title = strong("Density Plot"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = TRUE,
+              width = "100%", 
+              tags$li("Shows the distribution of a continuous variable by estimating its probability density function.")),
+            
+            box(
+              title = strong("Histogram Plot"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = TRUE,
+              width = "100%", 
+              tags$li("Displays the distribution of a continuous variable by dividing the data into bins and showing the 
+                        frequency or density of observations in each bin.")),
+            
+            box(
+              title = strong("Bar Plot"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = TRUE,
+              width = "100%", 
+              tags$li("Represents categorical data using rectangular bars, where the height or length of each bar corresponds 
+                        to the frequency or value of the category.")),
+            
+            box(
+              title = strong("Normal Q-Q Plot"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = TRUE,
+              width = "100%", 
+              tags$li("Compares the quantiles of a sample to the quantiles of a specified theoretical distribution 
+                        (usually the normal distribution) to assess if the sample follows a particular distribution.")),
+            box(
+              title = strong("Scatter Plot"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = TRUE,
+              width = "100%", 
+              tags$li("Displays the relationship between two continuous variables by plotting individual data points as dots 
+                        on a two-dimensional coordinate system.")),
+            box(
+              title = strong("Log transformation Plot"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = TRUE,
+              width = "100%", 
+              tags$li("Applies a logarithmic transformation to one or both axes of a plot, which can help visualize 
+                        data with exponential or highly skewed distributions.")),
+            box(
+              title = strong("Box Plot"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = TRUE,
+              width = "100%", 
+              tags$li("Summarizes the distribution of a continuous variable using a box and whisker plot, showing the median, 
+                        quartiles, and potential outliers.")),
+            box(
+              title = strong("3D Plot"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = TRUE,
+              width = "100%", 
+              tags$li("Display data in a three-dimensional space, allowing visualization of relationships among three variables.")),
+            box(
+              title = strong("Line Plot"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = TRUE,
+              width = "100%", 
+              tags$li("Represent data points connected by lines, commonly used for time series or continuous data analysis.")),
+            box(
+              title = strong("Contour Plot"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = TRUE,
+              width = "100%", 
+              tags$li("Contour plots: Visualize 3D data on a 2D plane, using contour lines to represent levels of a continuous variable.")),
+            box(
+              title = strong("Heat Maps"),
+              status = "primary",
+              collapsible = TRUE,
+              collapsed = TRUE,
+              width = "100%", 
+              tags$li("Use colors to represent values in a matrix or grid, providing a visual summary of patterns or intensities."))
             
           )
         ),
-        #### Set up the simple visualization Page ----
+        #### simple visualization Page ----
         tabItem(
           tabName = 'VisualOne',
           tabsetPanel(
@@ -196,55 +284,52 @@ ui <- list(
                 mainPanel(
                   fluidRow(
                     column(6,
-                      plotOutput(
-                        outputId = "oneDensity",
-                        width = "110%",
-                        height = "350px"
-                      ) %>% withSpinner(color = "#FFFFFF")
-                    ),
-                    column(
-                      width = 5,
-                      tags$strong('R code: '),
-                      uiOutput('DensityoneCode'),
-                     
-                    )
-                    
+                           plotOutput(
+                             outputId="oneDensity", 
+                             width="150%",
+                             height="350px")%>% 
+                             withSpinner(color="#FFFFFF")),
                   ),
+                  tags$strong('R Code: '),
+                  fluidRow(
+                    column(width = 10, uiOutput(outputId="DensityoneCode")),
+                  ),
+                  
                   br(),
                   br(),
+                  
                   fluidRow(
                     column(6,
                            plotOutput(
-                             outputId="onehist",
-                             width="110%",
-                             height="350px")%>% withSpinner(color="#FFFFFF")
-                    ),
-                    column(
-                      width = 5,
-                      tags$strong('R code: '),
-                      uiOutput('HistogramoneCode'),
-                     
-                      
-                    )
-                    
+                             outputId="onehist", 
+                             width="150%",
+                             height="350px")%>% 
+                             withSpinner(color="#FFFFFF")),
                   ),
+                  tags$strong('R Code: '),
+                  fluidRow(
+                    column(width = 10, uiOutput(outputId="HistogramoneCode")),
+                  ),
+               
+                
+                  
+                    
+                  
                   br(),
                   br(),
                   fluidRow(
                     column(6,
                            plotOutput(
                              outputId="onebar", 
-                             width="110%",
-                             height="350px")%>% withSpinner(color="#1E7B14")
-                    ),
-                    column(
-                      width = 5,
-                      tags$strong('R code: '),
-                      uiOutput('BarCode'),
-                      
-                     
-                    )
+                             width="180%",
+                             height="350px")%>% 
+                             withSpinner(color="#FFFFFF")),
                   ),
+                  tags$strong('R Code: '),
+                  fluidRow(
+                    column(width = 10, uiOutput(outputId="BarCode")),
+                  ),
+                  
                   
                   br(),
                   br(),
@@ -253,7 +338,8 @@ ui <- list(
                            plotOutput(
                              outputId="oneqq", 
                              width="180%",
-                             height="350px")%>% withSpinner(color="#1E7B14")
+                             height="350px")%>% 
+                             withSpinner(color="#1E7B14")
                     ),
                     column(
                       width = 8,
@@ -310,7 +396,8 @@ ui <- list(
                                   plotOutput(
                                     outputId="twoscatter", 
                                     width="200%",
-                                    height="350px")%>% withSpinner(color="#FFFFFF")),
+                                    height="350px")%>% 
+                                    withSpinner(color="#FFFFFF")),
                          ),
                          tags$strong('R Code: '),
                          fluidRow(
@@ -323,8 +410,8 @@ ui <- list(
                              6,plotOutput(
                                outputId="logTransformation", 
                                width="200%",
-                               height="350px"
-                               )%>% withSpinner(color="#FFFFFF"))
+                               height="350px")%>% 
+                               withSpinner(color="#FFFFFF"))
                          ),
                          tags$strong('R Code: '),
                          fluidRow(
@@ -338,7 +425,8 @@ ui <- list(
                                   plotOutput(
                                     outputId="twobar", 
                                     width="200%",
-                                    height="350px")%>% withSpinner(color="#FFFFFF")),
+                                    height="350px")%>% 
+                                    withSpinner(color="#FFFFFF")),
                          ),
                          tags$strong('R Code: '),
                          fluidRow(
@@ -351,7 +439,8 @@ ui <- list(
                                   plotOutput(
                                     outputId="twobox",
                                     width="200%",
-                                    height="350px")%>% withSpinner(color="#FFFFFF"))
+                                    height="350px")%>% 
+                                    withSpinner(color="#FFFFFF"))
                          ),
                          tags$strong('R Code: '),
                          fluidRow(
@@ -360,6 +449,7 @@ ui <- list(
                        )
                      )
             ),
+            ##### exercises page ----
             tabPanel(
               title='Exercises', 
               value='panel2',
@@ -390,7 +480,8 @@ ui <- list(
                          uiOutput('progress'),
                          wellPanel(
                            style = "background-color: #FFFFFF",
-                           uiOutput("question")%>% withSpinner(color="#FFFFFF"),
+                           uiOutput("question")%>% 
+                             withSpinner(color="#FFFFFF"),
                            uiOutput("options"),
                            br(),
                            selectInput(
@@ -464,7 +555,7 @@ ui <- list(
             )
           )
         ),
-######Advanced
+####Advanced ----
 tabItem(
   tabName = 'exp4',
   tabsetPanel(
@@ -884,6 +975,7 @@ tabItem(
 )
 
 # Define server logic ----
+
 server <- function(input, output, session) {
   output$dataTable <- DT::renderDataTable({
     if(input$dataset == "cars")
@@ -899,13 +991,15 @@ server <- function(input, output, session) {
   observeEvent(input$eval, {
     withBusyIndicatorServer("eval", {
       output$knitDoc <- renderUI({
-        return(isolate(HTML(
+        isolate(
+          HTML(
           knit2html(
             text = input$rmd,
-            
-            quiet = FALSE
+            template = FALSE,
+            quiet = TRUE
           )
-        )))
+        ))
+        
       })
       
       output$output <- renderPrint({
@@ -914,17 +1008,7 @@ server <- function(input, output, session) {
     })
   })
   
-  output$knitDoc <- renderUI(
-    expr = {
-      HTML(
-        knit2html(
-          text = input$rmd,
-          template = FALSE,
-          quiet = TRUE
-        )
-      )
-    }
-  )
+  
   
   output$output <- renderPrint({
     input$eval
@@ -956,7 +1040,7 @@ server <- function(input, output, session) {
   observeEvent(input$next2, {
     updateTabsetPanel(session, 'VisualOne', selected = 'panel2')
   })
-  ### Run the simple visualization Page ----
+  ### simple visualization Page ----
   #### single variable ----
   output$oneDensity <-
     renderCachedPlot({
@@ -1831,11 +1915,11 @@ server <- function(input, output, session) {
     })
     
   })
-  ### Run the advanced visualization ----
+  ### advanced visualization ----
   #### Maps ----
   #a. usMap
   output$usMapOut1 <- renderCachedPlot({
-    USArrests2 <- USArrests %>% mutate(state = row.names(.))
+    USArrests2 <- USArrests %>% st_as_sf()
     if (input$usMap1 == 'borders' & input$usMap2 == 'compact') {
       mUSMap(
         USArrests2,
@@ -1875,7 +1959,7 @@ server <- function(input, output, session) {
   }, cacheKeyExpr = {
     list(input$usMap1, input$usMap2)
   })
-
+  
   output$usMapOut2 <- renderUI ({
     tags$code(
       'mUSMap(USArrests2, key = "state", fill = "UrbanPop", plot = "',

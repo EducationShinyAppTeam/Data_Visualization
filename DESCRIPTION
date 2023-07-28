@@ -1,13 +1,14 @@
 Title: Data Visualization
 ShortName: Data Visualization
-Date: 2022-06-07
+Date: 2023-07-25
 Lifecycle: experimental
 Authors@R: c(
     person(given = "Neil", family = "Hatfield", email = "neil.hatfield@psu.edu", role = c("aut", "cre")),
     person(given = "Anna (Yinqi)", family = "Zhang", role = c("aut")),
     person(given = "Yiyun", family = "Gong", role = c("aut")),
     person(given = "Ethan", family = "Wright", role = c("ctb")),
-    person(given = "Yijun", family = "Yao", role = c("ctb"))
+    person(given = "Yijun", family = "Yao", role = c("ctb")),
+    person(given = "Aisiri", family = "Cherrimane", role = ("ctb"))
   )
 Chapter: Chapter 11
 Description: The goal of the app is to provide users with a comprehensive introduction to data visualization, covering both basic and advanced techniques using ggplot, Rplot, and other tools.
