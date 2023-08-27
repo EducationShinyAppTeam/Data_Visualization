@@ -61,7 +61,7 @@ ui <- list(
         menuItem('References', tabName = "References", icon = icon("leanpub"))
       ),
       tags$div(class = "sidebar-logo",
-               boastUtils::psu_eberly_logo("reversed"))
+               boastUtils::sidebarFooter())
     ),
     ### Create the body ----
     dashboardBody(
@@ -81,11 +81,11 @@ ui <- list(
           h2('Instructions'),
           tags$ol(
             tags$li("Familiarize yourself with data visualization and the different types 
-                    of plots by reviewing the prerequisites pages."),
+                    of plots by reviewing the prerequisites page."),
             tags$li("Engage in practical exercises involving simple data visualization, where 
                     you will manipulate different datasets using various plot types. This section introduces 
                     the creation of commonly used plots using ggplot and Rplot, concluding with exercise questions."),
-            tags$li("In the Advanced Data Visualization section, you will gain in-depth knowledge about 3D plots, 
+            tags$li("In the Advanced Data Visualization section, you will gain knowledge about coding features of 3D plots, 
                     line plots, contour plots, and heat maps.")
           ),
           br(),
@@ -123,10 +123,12 @@ ui <- list(
             patterns, trends, and relationships in data. Data visualization aids in understanding complex datasets, 
             identifying outliers, and presenting findings to a broader audience."),
           p("Some commonly used libraries for data visualization in R include ggplot and Rplot."),
-          p("Access the cheat sheet for more information on data visualization with ggplot2 ", 
+          p("Access the", 
             a(href = 'https://rstudio.github.io/cheatsheets/html/data-visualization.html?_gl=1*hpq94h*
               _ga*MTE1NTY3OTU3MS4xNjg5Njc2MDcx*_ga_2C0WZ1JHG0*MTY4OTY3NjA3MS4xLjAuMTY4OTY3NjA3MS4wLjAuMA', 
-              'Data Visualization cheatsheet', target="_blank"),),
+              'Data Visualization cheatsheet', target="_blank"),
+            "for more information on data visualization with ggplot2."),
+       
           
           h2("Examples of plots"),
           tags$ul(
@@ -468,11 +470,10 @@ ui <- list(
                                  the 'Knitted Output' header"
                                ),
                                tags$li(
-                                 "In each turn, 10 questions will be 
-                                         randomly draw from the question bank."
+                                 "Try questions randomly drawn from the question bank."
                                ),
                                tags$li(
-                                 "Uncomment the sample code to start to explore."
+                                 "Uncomment the sample code to start to explore what the code produces."
                                )
                              ),
                              style = "background-color: #FFFFFF")),
@@ -486,7 +487,7 @@ ui <- list(
                            br(),
                            selectInput(
                              "answer", 
-                             "Select your answer from below", 
+                             "Select your answer", 
                              c("","A", "B", "C")
                            ),
                            uiOutput("mark"),
