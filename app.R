@@ -75,7 +75,7 @@ ui <- list(
         #### Overview Page ----
         tabItem(
           tabName = 'overview',
-          h1('Data Visualization App'),
+          h1('Data Visualization'),
           p('This app illustrates R code for data visualization.'),
           br(),
           h2('Instructions'),
