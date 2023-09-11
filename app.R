@@ -21,6 +21,7 @@ library(datasets)
 library(learnr)
 library(knitr)
 library(rmarkdown)
+library(tibble)
 
 source("helpers.R")
 source("aceText.R")
@@ -236,7 +237,7 @@ ui <- list(
               sidebarLayout(
                 sidebarPanel(
                   id="sidebar",
-                  checkboxInput("previewData", "Preview of Datasets"),
+                
                   ##### select between plot and ggplot
                   selectInput(
                     inputId="plotType", label="Select Plot Method",
@@ -266,21 +267,26 @@ ui <- list(
                       choices = c("Girth", "Height", "Volume"),
                       selected = 'Girth')
                   ),
-                  conditionalPanel(
-                    condition="input.previewData==1",
-                    fluidRow(
-                      column(
-                        width = 1,
-                        p(strong("Dataset"))
-                      )
-                    ),
-                    fluidRow(
-                      column(
-                        width = 1,
-                        DT::dataTableOutput("dataTable")
-                      )
-                    )
-                  ),
+  
+                  br(),
+                  box(
+                    title = strong("CAR DATASET"),
+                    status = "primary",
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    width = "100%", 
+                    tags$li("The speed variable represents different levels of speed"),
+                    tags$li('The distance variable represents different levels of distance or displacement')),
+                  box(
+                    title = strong("TREES DATASET"),
+                    status = "primary",
+                    collapsible = TRUE,
+                    collapsed = TRUE,
+                    width = "100%", 
+                    tags$li("Girth: Girth typically refers to the circumference or the distance around the trunk of a tree."),
+                    tags$li("Height: Height represents the vertical measurement of trees"),
+                    tags$li('Volume: Volume likely represents the estimated volume of each tree')),
+          
                   
                 ),
                 mainPanel(
@@ -357,7 +363,7 @@ ui <- list(
                 )
               )
             ),
-            ##### Two Variables ----
+            ##### Two variables -----
             tabPanel(title='Two Variables', value='panel2',
                      h2('Two Variables Visualization'),
                      p('This section illustrates R code for data
@@ -367,7 +373,7 @@ ui <- list(
                        sidebarPanel(
                          id="sidebar",
                          ###### select continuous variable 1
-                         checkboxInput("previewDataTwo", "Preview of Datasets"),
+                         
                          selectInput(
                            inputId="continuous1",
                            label="Select First Continuous Variable as X:",
@@ -383,16 +389,25 @@ ui <- list(
                          selectInput(inputId="CategoryVar",
                                      label="Select Categorical Variable:",
                                      choices= 'Species',
-                                     selected = 'Species')
+                                     selected = 'Species'),
+                         br(),
+                         box(
+                           title = strong("DATASET"),
+                           status = "primary",
+                           collapsible = TRUE,
+                           collapsed = TRUE,
+                           width = "100%", 
+                           tags$li("Sepal.Length: This represents the length of the sepal, which is one of the outermost floral parts in the iris flower, typically measured in millimeters."),
+                           tags$li("Sepal.Width: It denotes the width or breadth of the sepal of the iris flower, usually measured in millimeters."),
+                           tags$li('Petal.Length: This variable signifies the length of the petal, which is one of the inner floral parts in the iris flower, measured in millimeters.'),
+                           tags$li("Petal.Width: It represents the width or breadth of the petal of the iris flower, typically measured in millimeters.")),
+                        
+                         
+                         
+                         
                        ),
                        mainPanel(
-                         conditionalPanel(
-                           condition="input.previewDataTwo==1",
-                           fluidRow(
-                             column(1, p(strong("Dataset iris"))),
-                             column(6, dataTableOutput("Previewiris"))
-                           )
-                         ),
+                         
                          fluidRow(
                            column(6,
                                   plotOutput(
@@ -533,6 +548,8 @@ ui <- list(
                              )
                            )
                          ),
+                         
+                         # Live Code
                          
                          h2("Try Your Code"),
                          aceEditor(
@@ -1920,43 +1937,51 @@ server <- function(input, output, session) {
   #### Maps ----
   #a. usMap
   output$usMapOut1 <- renderCachedPlot({
-    USArrests2 <- USArrests %>% st_as_sf()
-    if (input$usMap1 == 'borders' & input$usMap2 == 'compact') {
-      mUSMap(
-        USArrests2,
-        key = "state",
-        fill = "UrbanPop",
-        plot = 'borders',
-        style = 'compact'
-      )
-    }
-    else if (input$usMap1 == 'borders' & input$usMap2 == 'real') {
-      mUSMap(
-        USArrests2,
-        key = "state",
-        fill = "UrbanPop",
-        plot = 'borders',
-        style = 'real'
-      )
-    }
-    else if (input$usMap1 == 'frame' & input$usMap2 == 'compact') {
-      mUSMap(
-        USArrests2,
-        key = "state",
-        fill = "UrbanPop",
-        plot = 'frame',
-        style = 'compact'
-      )
-    }
-    else {
-      mUSMap(
-        USArrests2,
-        key = "state",
-        fill = "UrbanPop",
-        plot = 'frame',
-        style = 'real'
-      )
-    }
+    USArrests2 <- USArrests %>% rownames_to_column(var = "state")
+    # USArrests2 <- USArrests %>% st_as_sf()
+    mUSMap(
+      data = USArrests2,
+      key = "state",
+      fill = "UrbanPop",
+      plot = input$usMap1,
+      style = input$usMap2
+    )
+    # if (input$usMap1 == 'borders' & input$usMap2 == 'compact') {
+    #   mUSMap(
+    #     USArrests2,
+    #     key = "state",
+    #     fill = "UrbanPop",
+    #     plot = 'borders',
+    #     style = 'compact'
+    #   )
+    # }
+    # else if (input$usMap1 == 'borders' & input$usMap2 == 'real') {
+    #   mUSMap(
+    #     USArrests2,
+    #     key = "state",
+    #     fill = "UrbanPop",
+    #     plot = 'borders',
+    #     style = 'real'
+    #   )
+    # }
+    # else if (input$usMap1 == 'frame' & input$usMap2 == 'compact') {
+    #   mUSMap(
+    #     USArrests2,
+    #     key = "state",
+    #     fill = "UrbanPop",
+    #     plot = 'frame',
+    #     style = 'compact'
+    #   )
+    # }
+    # else {
+    #   mUSMap(
+    #     USArrests2,
+    #     key = "state",
+    #     fill = "UrbanPop",
+    #     plot = 'frame',
+    #     style = 'real'
+    #   )
+    # }
   }, cacheKeyExpr = {
     list(input$usMap1, input$usMap2)
   })
