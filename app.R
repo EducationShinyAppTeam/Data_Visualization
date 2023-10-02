@@ -269,23 +269,29 @@ ui <- list(
                   ),
   
                   br(),
-                  box(
-                    title = strong("CAR DATASET"),
-                    status = "primary",
-                    collapsible = TRUE,
-                    collapsed = TRUE,
-                    width = "100%", 
-                    tags$li("The speed variable represents different levels of speed"),
-                    tags$li('The distance variable represents different levels of distance or displacement')),
-                  box(
-                    title = strong("TREES DATASET"),
-                    status = "primary",
-                    collapsible = TRUE,
-                    collapsed = TRUE,
-                    width = "100%", 
-                    tags$li("Girth: Girth typically refers to the circumference or the distance around the trunk of a tree."),
-                    tags$li("Height: Height represents the vertical measurement of trees"),
-                    tags$li('Volume: Volume likely represents the estimated volume of each tree')),
+                  conditionalPanel(
+                    condition = "input.dataset == 'cars'",
+                    box(
+                      title = strong("CAR DATASET"),
+                      status = "primary",
+                      collapsible = TRUE,
+                      collapsed = TRUE,
+                      width = "100%", 
+                      tags$li("The speed variable represents different levels of speed"),
+                      tags$li('The distance variable represents different levels of distance or displacement'))
+                  ),
+                  conditionalPanel(
+                    condition = "input.dataset == 'trees'",
+                    box(
+                      title = strong("TREES DATASET"),
+                      status = "primary",
+                      collapsible = TRUE,
+                      collapsed = TRUE,
+                      width = "100%", 
+                      tags$li("Girth: Girth typically refers to the circumference or the distance around the trunk of a tree."),
+                      tags$li("Height: Height represents the vertical measurement of trees"),
+                      tags$li('Volume: Volume likely represents the estimated volume of each tree'))
+                  ),
           
                   
                 ),
