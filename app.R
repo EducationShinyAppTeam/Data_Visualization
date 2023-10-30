@@ -94,7 +94,7 @@ ui <- list(
             style = 'text-align: center',
             bsButton(
               inputId = 'go2p',
-              label = 'Go to Prerquisite page',
+              label = 'Go to Prerequisite page',
               icon = icon('bolt'),
               size = 'large', 
               class='circle grow')
@@ -106,14 +106,20 @@ ui <- list(
           p(
           'This application was coded and developed by Anna (Yinqi) Zhang in 2018 
            and Yiyun Gong in 2019.
-           Special Thanks to Grace (Yubaihe) Zhou for being incredibly helpful 
-           with programming issues.
            It was updated for formatting by Ethan Wright 2020 
-          and Yijun Yao in 2022. This app was updated in 2023 by Aisiri C.Narendra'
+          and Yijun Yao in 2022. 
+          This app was updated in 2023 by Aisiri C.Narendra'
           ),
+          br(),
+          p(
+            'Cite this app as:
+Zhang, A., Gong, Y., Wright, E., Yao, Y., Pearl, D. K., Hatfield, N. J., and Cherrimane, A.N. (2023).
+Data Visualization. [R Shiny app].
+Available https://psu-eberly.shinyapps.io/Data_Visualization
+'),
           div(
-            class = "updated", "Last Update: 7/18/2023 by ACN.")
-        ),
+            class = "updated", "Last Update: 7/18/2023 by ACN.")),
+        
         #### Prerequisites Page ----
         tabItem(
           tabName = "prerequisite",
@@ -139,7 +145,7 @@ ui <- list(
               collapsible = TRUE,
               collapsed = TRUE,
               width = "100%", 
-              tags$li("Shows the distribution of a continuous variable by estimating its probability density function.")),
+              p("Shows the distribution of a continuous variable by estimating its probability density function.")),
             
             box(
               title = strong("Histogram Plot"),
@@ -147,7 +153,7 @@ ui <- list(
               collapsible = TRUE,
               collapsed = TRUE,
               width = "100%", 
-              tags$li("Displays the distribution of a continuous variable by dividing the data into bins and showing the 
+              p("Displays the distribution of a continuous variable by dividing the data into bins and showing the 
                         frequency or density of observations in each bin.")),
             
             box(
@@ -156,7 +162,7 @@ ui <- list(
               collapsible = TRUE,
               collapsed = TRUE,
               width = "100%", 
-              tags$li("Represents categorical data using rectangular bars, where the height or length of each bar corresponds 
+              p("Represents categorical data using rectangular bars, where the height or length of each bar corresponds 
                         to the frequency or value of the category.")),
             
             box(
@@ -165,7 +171,7 @@ ui <- list(
               collapsible = TRUE,
               collapsed = TRUE,
               width = "100%", 
-              tags$li("Compares the quantiles of a sample to the quantiles of a specified theoretical distribution 
+              p("Compares the quantiles of a sample to the quantiles of a specified theoretical distribution 
                         (usually the normal distribution) to assess if the sample follows a particular distribution.")),
             box(
               title = strong("Scatter Plot"),
@@ -173,7 +179,7 @@ ui <- list(
               collapsible = TRUE,
               collapsed = TRUE,
               width = "100%", 
-              tags$li("Displays the relationship between two continuous variables by plotting individual data points as dots 
+              p("Displays the relationship between two continuous variables by plotting individual data points as dots 
                         on a two-dimensional coordinate system.")),
             box(
               title = strong("Log transformation Plot"),
@@ -181,7 +187,7 @@ ui <- list(
               collapsible = TRUE,
               collapsed = TRUE,
               width = "100%", 
-              tags$li("Applies a logarithmic transformation to one or both axes of a plot, which can help visualize 
+              p("Applies a logarithmic transformation to one or both axes of a plot, which can help visualize 
                         data with exponential or highly skewed distributions.")),
             box(
               title = strong("Box Plot"),
@@ -189,7 +195,7 @@ ui <- list(
               collapsible = TRUE,
               collapsed = TRUE,
               width = "100%", 
-              tags$li("Summarizes the distribution of a continuous variable using a box and whisker plot, showing the median, 
+              p("Summarizes the distribution of a continuous variable using a box and whisker plot, showing the median, 
                         quartiles, and potential outliers.")),
             box(
               title = strong("3D Plot"),
@@ -197,28 +203,28 @@ ui <- list(
               collapsible = TRUE,
               collapsed = TRUE,
               width = "100%", 
-              tags$li("Display data in a three-dimensional space, allowing visualization of relationships among three variables.")),
+              p("Display data in a three-dimensional space, allowing visualization of relationships among three variables.")),
             box(
               title = strong("Line Plot"),
               status = "primary",
               collapsible = TRUE,
               collapsed = TRUE,
               width = "100%", 
-              tags$li("Represent data points connected by lines, commonly used for time series or continuous data analysis.")),
+              p("Represent data points connected by lines, commonly used for time series of continuous data.")),
             box(
               title = strong("Contour Plot"),
               status = "primary",
               collapsible = TRUE,
               collapsed = TRUE,
               width = "100%", 
-              tags$li("Contour plots: Visualize 3D data on a 2D plane, using contour lines to represent levels of a continuous variable.")),
+              p("Contour plots: Visualize 3D data on a 2D plane, using contour lines to represent levels of a continuous variable.")),
             box(
               title = strong("Heat Maps"),
               status = "primary",
               collapsible = TRUE,
               collapsed = TRUE,
               width = "100%", 
-              tags$li("Use colors to represent values in a matrix or grid, providing a visual summary of patterns or intensities."))
+              p("Use colors to represent values in a matrix or grid, providing a visual summary of patterns or intensities."))
             
           )
         ),
@@ -241,7 +247,7 @@ ui <- list(
                   ##### select between plot and ggplot
                   selectInput(
                     inputId="plotType", label="Select Plot Method",
-                    choices = c('plot', 'ggplot'),
+                    choices = c('plotly', 'ggplot'),
                     selected = 'plot'
                   ),
                   ##### select datasets
@@ -277,8 +283,8 @@ ui <- list(
                       collapsible = TRUE,
                       collapsed = TRUE,
                       width = "100%", 
-                      tags$li("The speed variable represents different levels of speed"),
-                      tags$li('The distance variable represents different levels of distance or displacement'))
+                      tags$li("The speed variable represents different levels of speed (unit - m/hr)"),
+                      tags$li('The distance variable represents different levels of distance or displacement (unit - feet)'))
                   ),
                   conditionalPanel(
                     condition = "input.dataset == 'trees'",
@@ -288,9 +294,9 @@ ui <- list(
                       collapsible = TRUE,
                       collapsed = TRUE,
                       width = "100%", 
-                      tags$li("Girth: Girth typically refers to the circumference or the distance around the trunk of a tree."),
-                      tags$li("Height: Height represents the vertical measurement of trees"),
-                      tags$li('Volume: Volume likely represents the estimated volume of each tree'))
+                      tags$li("Girth: Girth typically refers to the circumference or the distance around the trunk of a tree. (unit - inches)"),
+                      tags$li("Height: Height represents the vertical measurement of trees. (unit - feet) "),
+                      tags$li('Volume: Volume likely represents the estimated volume of each tree. (unit - cubic feet)'))
                   ),
           
                   
@@ -1952,42 +1958,6 @@ server <- function(input, output, session) {
       plot = input$usMap1,
       style = input$usMap2
     )
-    # if (input$usMap1 == 'borders' & input$usMap2 == 'compact') {
-    #   mUSMap(
-    #     USArrests2,
-    #     key = "state",
-    #     fill = "UrbanPop",
-    #     plot = 'borders',
-    #     style = 'compact'
-    #   )
-    # }
-    # else if (input$usMap1 == 'borders' & input$usMap2 == 'real') {
-    #   mUSMap(
-    #     USArrests2,
-    #     key = "state",
-    #     fill = "UrbanPop",
-    #     plot = 'borders',
-    #     style = 'real'
-    #   )
-    # }
-    # else if (input$usMap1 == 'frame' & input$usMap2 == 'compact') {
-    #   mUSMap(
-    #     USArrests2,
-    #     key = "state",
-    #     fill = "UrbanPop",
-    #     plot = 'frame',
-    #     style = 'compact'
-    #   )
-    # }
-    # else {
-    #   mUSMap(
-    #     USArrests2,
-    #     key = "state",
-    #     fill = "UrbanPop",
-    #     plot = 'frame',
-    #     style = 'real'
-    #   )
-    # }
   }, cacheKeyExpr = {
     list(input$usMap1, input$usMap2)
   })
