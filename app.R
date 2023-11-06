@@ -247,7 +247,7 @@ Available https://psu-eberly.shinyapps.io/Data_Visualization
                   ##### select between plot and ggplot
                   selectInput(
                     inputId="plotType", label="Select Plot Method",
-                    choices = c('plotly', 'ggplot'),
+                    choices = c('plot', 'ggplot'),
                     selected = 'plot'
                   ),
                   ##### select datasets
@@ -284,7 +284,7 @@ Available https://psu-eberly.shinyapps.io/Data_Visualization
                       collapsed = TRUE,
                       width = "100%", 
                       tags$li("The speed variable represents different levels of speed (unit - m/hr)"),
-                      tags$li('The distance variable represents different levels of distance or displacement (unit - feet)'))
+                      tags$li('The distance variable represents different levels of distance or displacement (unit - Feet)'))
                   ),
                   conditionalPanel(
                     condition = "input.dataset == 'trees'",
@@ -295,8 +295,8 @@ Available https://psu-eberly.shinyapps.io/Data_Visualization
                       collapsed = TRUE,
                       width = "100%", 
                       tags$li("Girth: Girth typically refers to the circumference or the distance around the trunk of a tree. (unit - inches)"),
-                      tags$li("Height: Height represents the vertical measurement of trees. (unit - feet) "),
-                      tags$li('Volume: Volume likely represents the estimated volume of each tree. (unit - cubic feet)'))
+                      tags$li("Height: Height represents the vertical measurement of trees. (unit - Feet) "),
+                      tags$li('Volume: Volume likely represents the estimated volume of each tree. (unit - cubic Feet)'))
                   ),
           
                   
@@ -425,7 +425,7 @@ Available https://psu-eberly.shinyapps.io/Data_Visualization
                                   plotOutput(
                                     outputId="twoscatter", 
                                     width="200%",
-                                    height="350px")%>% 
+                                    height="400px")%>% 
                                     withSpinner(color="#FFFFFF")),
                          ),
                          tags$strong('R Code: '),
@@ -1079,28 +1079,34 @@ server <- function(input, output, session) {
           if (input$plotType == 'plot') {
             plot(density(cars$speed),
                  main = "Density Plot",
-                 xlab = input$carsVariable)
+                 xlab = "Speed (mph)",  
+                 ylab = "Density")      
           }
           else if (input$plotType == 'ggplot') {
             ggplot(aes(speed), data = cars) +
               geom_density(color = "darkblue",
                            fill = "lightblue",
                            alpha = 0.4) +
-              ggtitle('Density Plot')
+              ggtitle('Density Plot') +
+              xlab("Speed(mph)") +  
+              ylab("Density")
           }
         }
         else if (input$carsVariable == 'dist') {
           if (input$plotType == 'plot') {
             plot(density(cars$dist),
                  main = "Density Plot",
-                 xlab = input$carsVariable)
+                 xlab = "dist (Feet)",  
+                 ylab = "Density")     
           }
           else if (input$plotType == 'ggplot') {
             ggplot(aes(dist), data = cars) +
               geom_density(color = "darkblue",
                            fill = "lightblue",
                            alpha = 0.4) +
-              ggtitle('Density Plot')
+              ggtitle('Density Plot') +
+              xlab("dist (Feet)") +  
+              ylab("Density")
           }
         }
       }
@@ -1109,28 +1115,36 @@ server <- function(input, output, session) {
           if (input$plotType == 'plot') {
             plot(density(trees$Girth),
                  main = "Density Plot",
-                 xlab = input$carsVariable)
+                 xlab = "Girth(inches)",
+                 ylab = "Density")
+            
           }
           else if (input$plotType == 'ggplot') {
             ggplot(aes(Girth), data = trees) +
               geom_density(color = "darkblue",
                            fill = "lightblue",
                            alpha = 0.4) +
-              ggtitle('Density Plot')
+              ggtitle('Density Plot') +
+              xlab("Girth(inches)") + 
+              ylab("Density")
           }
         }
         else if (input$treesVariable == 'Height') {
           if (input$plotType == 'plot') {
             plot(density(trees$Height),
                  main = "Density Plot",
-                 xlab = input$carsVariable)
+                 xlab = "Height(Feet)",
+                 ylab = "Density")
           }
           else if (input$plotType == 'ggplot') {
             ggplot(aes(Height), data = trees) +
               geom_density(color = "darkblue",
                            fill = "lightblue",
                            alpha = 0.4) +
-              ggtitle('Density Plot')
+              ggtitle('Density Plot') +
+              xlab("Height(Feet)") +
+              ylab("Density")
+                
           }
 
         }
@@ -1138,14 +1152,18 @@ server <- function(input, output, session) {
           if (input$plotType == 'plot') {
             plot(density(trees$Volume),
                  main = "Density Plot",
-                 xlab = input$carsVariable)
+                 xlab = "Volume(Cubic Feet)",
+                 ylab = "Density")
           }
           else if (input$plotType == 'ggplot') {
             ggplot(aes(Volume), data = trees) +
               geom_density(color = "darkblue",
                            fill = "lightblue",
                            alpha = 0.4) +
-              ggtitle('Density Plot')
+              ggtitle('Density Plot') +
+              xlab("Volume(Cubic Feet)") +
+              ylab("Density")
+              
           }
 
         }
@@ -1165,28 +1183,34 @@ server <- function(input, output, session) {
         if (input$plotType == 'plot') {
           hist(cars$speed,
                main = "Histogram",
-               xlab = input$carsVariable)
+               xlab = "Speed(mph)",
+               ylab = "count")
         }
         else if (input$plotType == 'ggplot') {
           ggplot(aes(speed), data = cars) +
             geom_histogram(color = "darkblue",
                            fill = "lightblue",
                            alpha = 0.4) +
-            ggtitle("Histogram")
+            ggtitle("Histogram") +
+            xlab("Speed(mph)")+
+            ylab("count")
         }
       }
       else if (input$carsVariable == 'dist') {
         if (input$plotType == 'plot') {
           hist(cars$dist,
                main = "Histogram",
-               xlab = input$carsVariable)
+               xlab = "Dist(Feet)",
+               ylab = "count")
         }
         else if (input$plotType == 'ggplot') {
           ggplot(aes(dist), data = cars) +
             geom_histogram(color = "darkblue",
                            fill = "lightblue",
                            alpha = 0.4) +
-            ggtitle("Histogram")
+            ggtitle("Histogram")+
+            xlab("Dist(Feet)")+
+            ylab("count")
         }
 
       }
@@ -1196,42 +1220,51 @@ server <- function(input, output, session) {
         if (input$plotType == 'plot') {
           hist(trees$Girth,
                main = "Histogram",
-               xlab = input$carsVariable)
+               xlab = "Girth(Inches)",
+               ylab = "count")
         }
         else if (input$plotType == 'ggplot') {
           ggplot(aes(Girth), data = trees) +
             geom_histogram(color = "darkblue",
                            fill = "lightblue",
                            alpha = 0.4) +
-            ggtitle("Histogram")
+            ggtitle("Histogram") +
+            xlab("Girth(Inches)")+
+            ylab("count")
         }
       }
       else if (input$treesVariable == 'Height') {
         if (input$plotType == 'plot') {
           hist(trees$Height,
                main = "Histogram",
-               xlab = input$carsVariable)
+               xlab = "Height(Feet)",
+               ylab = "count")
         }
         else if (input$plotType == 'ggplot') {
           ggplot(aes(Height), data = trees) +
             geom_histogram(color = "darkblue",
                            fill = "lightblue",
                            alpha = 0.4) +
-            ggtitle("Histogram")
+            ggtitle("Histogram") +
+            xlab("Height(Feet)") +
+            ylab("count")
         }
       }
       else if (input$treesVariable == 'Volume') {
         if (input$plotType == 'plot') {
           hist(trees$Volume,
                main = "Histogram",
-               xlab = input$carsVariable)
+               xlab = "Volume(Cubic Feet)",
+               ylab = "count")
         }
         else if (input$plotType == 'ggplot') {
           ggplot(aes(Volume), data = trees) +
             geom_histogram(color = "darkblue",
                            fill = "lightblue",
                            alpha = 0.4) +
-            ggtitle("Histogram")
+            ggtitle("Histogram") +
+            xlab("Volume(Cubic Feet)")+
+            ylab("count")
         }
 
       }
@@ -1251,7 +1284,8 @@ server <- function(input, output, session) {
           if (input$plotType == 'plot') {
             barplot(cars$speed,
                     main = "Bar Plot",
-                    xlab = input$carsVariable)
+                    xlab = "Speed (mph)")
+                
           }
           else if (input$plotType == 'ggplot') {
             ggplot(aes(speed), data = cars) +
@@ -1263,14 +1297,16 @@ server <- function(input, output, session) {
                 fill = "lightblue",
                 alpha = 0.4
               ) +
-              ggtitle('Frequency polygon')
+              ggtitle('Frequency polygon') +
+              xlab("Speed(mph)")
           }
         }
         else if (input$carsVariable == 'dist') {
           if (input$plotType == 'plot') {
             barplot(cars$dist,
                     main = "Bar Plot",
-                    xlab = input$carsVariable)
+                    xlab = "Dist (Feet)")
+                     
           }
           else if (input$plotType == 'ggplot') {
             ggplot(aes(dist), data = cars) +
@@ -1282,7 +1318,8 @@ server <- function(input, output, session) {
                 fill = "lightblue",
                 alpha = 0.4
               ) +
-              ggtitle('Frequency polygon')
+              ggtitle('Frequency polygon') +
+              xlab("Dist(Feet)")
           }
 
         }
@@ -1292,7 +1329,8 @@ server <- function(input, output, session) {
           if (input$plotType == 'plot') {
             barplot(trees$Girth,
                     main = "Bar Plot",
-                    xlab = input$carsVariable)
+                    xlab = "Girth(Inches)",
+                    ylab = "count")
           }
           else if (input$plotType == 'ggplot') {
             ggplot(aes(Girth), data = trees) +
@@ -1304,14 +1342,17 @@ server <- function(input, output, session) {
                 fill = "lightblue",
                 alpha = 0.4
               ) +
-              ggtitle('Frequency polygon')
+              ggtitle('Frequency polygon') +
+              xlab("Girth(Inches)") +
+              ylab("count")
           }
         }
         else if (input$treesVariable == 'Height') {
           if (input$plotType == 'plot') {
             barplot(trees$Height,
                     main = "Bar Plot",
-                    xlab = input$carsVariable)
+                    xlab = "Height(Feet)",
+                    ylab = "Count")
           }
           else if (input$plotType == 'ggplot') {
             ggplot(aes(Height), data = trees) +
@@ -1323,7 +1364,9 @@ server <- function(input, output, session) {
                 fill = "lightblue",
                 alpha = 0.4
               ) +
-              ggtitle('Frequency polygon')
+              ggtitle('Frequency polygon') +
+              xlab("Height(Feet)")+
+              ylab("Count")
           }
 
         }
@@ -1331,7 +1374,8 @@ server <- function(input, output, session) {
           if (input$plotType == 'plot') {
             barplot(trees$Volume,
                     main = "Bar Plot",
-                    xlab = input$carsVariable)
+                    xlab = "Volume(Cubic Feet)",
+                    ylab = "Count" )
           }
           else if (input$plotType == 'ggplot') {
             ggplot(aes(Volume), data = trees) +
@@ -1343,7 +1387,10 @@ server <- function(input, output, session) {
                 fill = "lightblue",
                 alpha = 0.4
               ) +
-              ggtitle('Frequency polygon')
+              ggtitle('Frequency polygon') + 
+              xlab("Volume(Cubic Feet)")+
+              ylab("Count")
+              
           }
         }
       }
@@ -1623,7 +1670,9 @@ server <- function(input, output, session) {
           geom_smooth(aes(colour = factor(Species)),
                       linetype = 'twodash',
                       size = 0.8) +
-          ggtitle("Scatter Plot")
+          ggtitle("Scatter Plot") +
+          xlab("Sepal.Length(millimeters)") +
+          ylab("Petal.Length(millimeters)")
       }
       else if (input$continuous2 == 'Petal.Width') {
         ggplot(aes(Sepal.Length, Petal.Width), data = iris) +
@@ -1631,7 +1680,9 @@ server <- function(input, output, session) {
           geom_smooth(aes(colour = factor(Species)),
                       linetype = 'twodash',
                       size = 0.8) +
-          ggtitle("Scatter Plot")
+          ggtitle("Scatter Plot") +
+          xlab("Sepal.Length(millimeters)") +
+          ylab("Petal.Width(millimeters)")
       }
     }
     else if (input$continuous1 == 'Sepal.Width') {
@@ -1641,7 +1692,9 @@ server <- function(input, output, session) {
           geom_smooth(aes(colour = factor(Species)),
                       linetype = 'twodash',
                       size = 0.8) +
-          ggtitle("Scatter Plot")
+          ggtitle("Scatter Plot") +
+          xlab("Sepal.Width(millimeters)") +
+          ylab("Petal.Length(millimeters)")
       }
       else if (input$continuous2 == 'Petal.Width') {
         ggplot(aes(Sepal.Width, Petal.Width), data = iris) +
@@ -1649,7 +1702,9 @@ server <- function(input, output, session) {
           geom_smooth(aes(colour = factor(Species)),
                       linetype = 'twodash',
                       size = 0.8) +
-          ggtitle("Scatter Plot")
+          ggtitle("Scatter Plot") +
+          xlab("Sepal.Width(millimeters)") +
+          ylab("Petal.Width(millimeters)")
       }
     }
   }, cacheKeyExpr = {
@@ -1663,13 +1718,17 @@ server <- function(input, output, session) {
         ggplot(aes(Sepal.Length, Petal.Length), data = iris) +
           geom_point(aes(colour = factor(Species))) +
           coord_trans(x = "log2", y = "log2") +
-          ggtitle("Log Transformation")
+          ggtitle("Log Transformation")+
+          xlab("Sepal.Length(millimeters)") +
+          ylab("Petal.Length(millimeters)")
       }
       else if (input$continuous2 == 'Petal.Width') {
         ggplot(aes(Sepal.Length, Petal.Width), data = iris) +
           geom_point(aes(colour = factor(Species))) +
           coord_trans(x = "log2", y = "log2") +
-          ggtitle("Log Transformation")
+          ggtitle("Log Transformation") +
+          xlab("Sepal.Length(millimeters)") +
+          ylab("Petal.Width(millimeters)")
         #sunflowerplot(Sepal.Length~Petal.Width, data=iris, main="SunflowerPlot")
       }
     }
@@ -1678,13 +1737,17 @@ server <- function(input, output, session) {
         ggplot(aes(Sepal.Width, Petal.Length), data = iris) +
           geom_point(aes(colour = factor(Species))) +
           coord_trans(x = "log2", y = "log2") +
-          ggtitle("Log Transformation")
+          ggtitle("Log Transformation") +
+          xlab("Sepal.Width(millimeters)") +
+          ylab("Petal.Length(millimeters)")
       }
       else if (input$continuous2 == 'Petal.Width') {
         ggplot(aes(Sepal.Width, Petal.Width), data = iris) +
           geom_point(aes(colour = factor(Species))) +
           coord_trans(x = "log2", y = "log2") +
-          ggtitle("Log Transformation")
+          ggtitle("Log Transformation") +
+          xlab("Sepal.Width(millimeters)") +
+          ylab("Petal.Width(millimeters)")
         #sunflowerplot(Sepal.Width~Petal.Width, data=iris, main="SunflowerPlot")
       }
     }
@@ -1702,7 +1765,9 @@ server <- function(input, output, session) {
                  fill = factor(Species)
                )) +
           geom_bar(stat = "identity") +
-          ggtitle('Bar Plot')
+          ggtitle('Bar Plot')+ 
+          xlab("Sepal.Length(millimeters)") +
+          ylab("Petal.Length(millimeters)")
       }
       else if (input$continuous2 == 'Petal.Width') {
         ggplot(data = iris,
@@ -1712,7 +1777,9 @@ server <- function(input, output, session) {
                  fill = factor(Species)
                )) +
           geom_bar(stat = "identity") +
-          ggtitle('Bar Plot')
+          ggtitle('Bar Plot') +
+          xlab("Sepal.Length(millimeters)") +
+          ylab("Petal.Width(millimeters)")
       }
     }
     else if (input$continuous1 == 'Sepal.Width') {
@@ -1724,7 +1791,9 @@ server <- function(input, output, session) {
                  fill = factor(Species)
                )) +
           geom_bar(stat = "identity") +
-          ggtitle('Bar Plot')
+          ggtitle('Bar Plot') +
+          xlab("Sepal.Width(millimeters)") +
+          ylab("Petal.Length(millimeters)")
       }
       else if (input$continuous2 == 'Petal.Width') {
         ggplot(data = iris,
@@ -1734,7 +1803,9 @@ server <- function(input, output, session) {
                  fill = factor(Species)
                )) +
           geom_bar(stat = "identity") +
-          ggtitle('Bar Plot')
+          ggtitle('Bar Plot') +
+          xlab("Sepal.Width(millimeters)") +
+          ylab("Petal.Width(millimeters)")
       }
     }
   }, cacheKeyExpr = {
@@ -1752,7 +1823,9 @@ server <- function(input, output, session) {
                  color = Species
                )) +
           geom_boxplot() +
-          ggtitle('Boxplot')
+          ggtitle('Boxplot')+
+          xlab("Sepal.Length(millimeters)") +
+          ylab("Petal.Length(millimeters)")
       }
       else if (input$continuous2 == 'Petal.Width') {
         ggplot(data = iris,
@@ -1762,7 +1835,9 @@ server <- function(input, output, session) {
                  color = Species
                )) +
           geom_boxplot() +
-          ggtitle('Boxplot')
+          ggtitle('Boxplot') +
+          xlab("Sepal.Length(millimeters)") +
+          ylab("Petal.Width(millimeters)")
       }
     }
     else if (input$continuous1 == 'Sepal.Width') {
@@ -1774,7 +1849,9 @@ server <- function(input, output, session) {
                  color = Species
                )) +
           geom_boxplot() +
-          ggtitle('Boxplot')
+          ggtitle('Boxplot') +
+          xlab("Sepal.Width(millimeters)") +
+          ylab("Petal.Length(millimeters)")
       }
       else if (input$continuous2 == 'Petal.Width') {
         ggplot(data = iris,
@@ -1784,7 +1861,9 @@ server <- function(input, output, session) {
                  color = Species
                )) +
           geom_boxplot() +
-          ggtitle('Boxplot')
+          ggtitle('Boxplot') +
+          xlab("Sepal.Width(millimeters)") +
+          ylab("Petal.Width(millimeters)")
       }
     }
   }, cacheKeyExpr = {
